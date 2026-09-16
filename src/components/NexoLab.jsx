@@ -367,9 +367,9 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <div className="relative group rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500">
+                            <div className="relative group rounded-3xl overflow-hidden w-full flex flex-col border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500">
     <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
-    <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
+    <div className="relative z-10 p-8 w-full flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
                                         <h2 className="text-xl font-bold text-accent m-0">
                                             {currentProblem.title.includes(':') ? (
@@ -391,7 +391,7 @@ setUserGrid(initialGrid);
                                             {hintsUsed >= 3 ? 'Sin pistas' : `Pista (${3 - hintsUsed})`}
                                         </button>
                                     </div>
-                                    <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
+                                    <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-0">{currentProblem.description}</p>
                                     
                                     {hintsUsed > 0 && (
                                         <div className="pl-2 mt-4 space-y-3">
@@ -409,10 +409,10 @@ setUserGrid(initialGrid);
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
                                     <div>
-                                        <h3 className="text-lg font-bold text-text-main mb-4">1. Tabla de Verdad</h3>
+                                        <h3 className="text-2xl font-bold text-text-main mb-6 text-center">Tabla de Verdad</h3>
                                 
                                 
-                                <div className="overflow-x-auto mb-10 flex justify-center">
+                                <div className="overflow-x-auto flex justify-center">
                                     <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border">
                                         <thead className="glass-panel">
                                             <tr>
@@ -448,8 +448,8 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 
                                 </div>
                                     <div className="flex flex-col">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-lg font-bold text-text-main">2. Mapa de Karnaugh</h3>
+                                        <div className="flex items-center justify-center mb-6">
+                                            <h3 className="text-2xl font-bold text-text-main text-center">Mapa de Karnaugh</h3>
                                         </div>
                                         <div className="overflow-x-auto flex justify-center items-start">
                                             {(() => {
@@ -486,7 +486,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                                                                         else if (current === '1') next = '0';
                                                                                         setKmapValues(prev => ({...prev, [cellKey]: next}));
                                                                                     }}
-                                                                                    className={`w-12 h-12 sm:w-16 sm:h-14 text-xl sm:text-2xl rounded-xl font-bold transition-all shadow-sm border outline-none mx-auto flex items-center justify-center ${(kmapValues[cellKey] || '-') === '-' ? 'bg-transparent text-white/20 hover:bg-white/5 border-transparent shadow-none' : 'bg-transparent text-white border-accent'}`}
+                                                                                    className={`w-12 h-12 sm:w-16 sm:h-14 text-xl sm:text-2xl rounded-xl font-bold transition-all shadow-sm border outline-none mx-auto flex items-center justify-center ${(kmapValues[cellKey] || '-') === '-' ? 'bg-transparent text-white/20 hover:bg-white/5 border-transparent shadow-none' : 'bg-transparent text-white border-white/20 hover:border-white/40'}`}
                                                                                 >
                                                                                     {kmapValues[cellKey] || '-'}
                                                                                 </button>
