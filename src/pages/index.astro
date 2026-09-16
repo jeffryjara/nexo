@@ -93,6 +93,13 @@ import { GlowCard } from '../components/ui/spotlight-card';
 
             links.forEach(link => {
                 link.addEventListener('mouseenter', () => {
+                    // Reset all other links immediately to prevent ghosting
+                    links.forEach(other => {
+                        if (other !== link) {
+                            other.style.zIndex = '';
+                        }
+                    });
+
                     link.style.position = 'relative';
                     link.style.zIndex = '50';
                     
@@ -101,13 +108,13 @@ import { GlowCard } from '../components/ui/spotlight-card';
                 });
 
                 link.addEventListener('mouseleave', () => {
+                    // Check if we are moving to another card immediately
+                    // If we are, the mouseenter of the new card will handle the overlay.
+                    // If not, we fade out the overlay.
                     overlay.classList.remove('opacity-100');
                     overlay.classList.add('opacity-0');
                     
-                    // Remove z-index after the fade animation completes (500ms)
-                    // so the card doesn't suddenly drop behind the fading overlay.
                     setTimeout(() => {
-                        // Only remove if we haven't hovered back onto it
                         if (!link.matches(':hover')) {
                             link.style.zIndex = '';
                         }
