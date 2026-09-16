@@ -347,19 +347,7 @@ setUserGrid(initialGrid);
 
             return (
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
-            <style>
-                {`
-                @keyframes problemGlow {
-                  0%, 100% { border-color: rgba(168,85,247, 0.2) !important; box-shadow: 0 0 20px rgba(168,85,247, 0.1) !important; }
-                  50% { border-color: rgba(168,85,247, 0.8) !important; box-shadow: 0 0 40px rgba(168,85,247, 0.5), inset 0 0 20px rgba(168,85,247, 0.15) !important; }
-                }
-                .animate-problem-glow {
-                  animation: problemGlow 3s ease-in-out infinite;
-                }
-                `}
-            </style>
-
-                    <div 
+            <div 
                         className={`sticky z-50 mx-auto w-full mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             scrolled 
                             ? 'max-w-5xl top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
@@ -375,15 +363,19 @@ setUserGrid(initialGrid);
                                         <h1 className="text-3xl font-extrabold text-text-main tracking-tight">Arquitectura del Computador</h1>
                                     </div>
                                 </div>
-                    <button onClick={() => setShowRules(true)} className="glass-panel px-5 py-2.5 rounded-xl font-bold text-sm text-accent hover:text-white transition flex items-center gap-2 border border-white/10 hover:bg-accent/20">💡 Reglas</button>
+                    <button onClick={() => setShowRules(true)} className="glass-panel px-5 py-2.5 rounded-xl font-bold text-sm text-white/50 hover:text-accent transition flex items-center gap-2 border border-white/10 hover:border-accent hover:bg-accent/10"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Reglas</button>
                         </div>
                     </div>
 
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <GlowCard tiltLevel="low" customSize={true} glowColor="purple" className="!bg-[#a855f7]/10 !backdrop-blur-md !border-2 !border-accent/30 animate-problem-glow !p-8 !rounded-3xl !relative !overflow-hidden !w-full !flex !flex-col !gap-2">
-                                                                <h2 className="text-xl font-bold text-accent drop-shadow-[0_0_12px_rgba(168,85,247,0.8)] mb-4 pl-2">{currentProblem.title}</h2>
+                            <GlowCard tiltLevel="low" customSize={true} glowColor="purple" className="!bg-[#09090b] !border-none !p-0 !rounded-3xl !relative !overflow-hidden !w-full !shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
+    <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0%,transparent_75%,#a855f7_100%)] opacity-80 z-0"></div>
+    <div className="absolute inset-[2px] bg-[#09090b] rounded-3xl z-0"></div>
+    <div className="absolute inset-[2px] bg-[#a855f7]/10 backdrop-blur-md rounded-3xl z-0"></div>
+    <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
+        <h2 className="text-xl font-bold text-accent mb-4 pl-2">{currentProblem.title}</h2>
                                 <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
                                 
                                 <div className="pl-2 border-t border-border pt-4 mt-2">
@@ -408,7 +400,8 @@ setUserGrid(initialGrid);
                                         </div>
                                     )}
                                 </div>
-                            </GlowCard>
+    </div>
+</GlowCard>
 
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
