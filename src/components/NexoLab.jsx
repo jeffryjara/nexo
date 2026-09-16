@@ -371,26 +371,26 @@ setUserGrid(initialGrid);
                         <div className="flex flex-col space-y-8 w-full">
                             
                             <GlowCard tiltLevel="low" customSize={true} glowColor="purple" className="!bg-[#09090b] !border-none !p-0 !rounded-3xl !relative !overflow-hidden !w-full !shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
-    <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0%,transparent_75%,#a855f7_100%)] opacity-80 z-0"></div>
+    <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0%,transparent_50%,#a855f7_100%)] opacity-100 blur-[6px] z-0"></div>
     <div className="absolute inset-[2px] bg-[#09090b] rounded-3xl z-0"></div>
     <div className="absolute inset-[2px] bg-[#a855f7]/10 backdrop-blur-md rounded-3xl z-0"></div>
     <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
-        <h2 className="text-xl font-bold text-accent mb-4 pl-2">{currentProblem.title}</h2>
-                                <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
-                                
-                                <div className="pl-2 border-t border-border pt-4 mt-2">
-                                    <button 
-                                        onClick={useHint} 
-                                        disabled={hintsUsed >= 3 || status === 'correct'}
-                                        className={`flex items-center gap-2 font-bold py-2 px-4 rounded-xl transition shadow-sm border
-                                            ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
-                                    >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
-                                        {hintsUsed >= 3 ? 'Sin pistas restantes' : `Usar Pista (${3 - hintsUsed} restantes)`}
-                                    </button>
-
+                                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
+                                        <h2 className="text-xl font-bold text-accent m-0">{currentProblem.title}</h2>
+                                        <button 
+                                            onClick={useHint} 
+                                            disabled={hintsUsed >= 3 || status === 'correct'}
+                                            className={`flex items-center gap-2 font-bold py-2 px-4 rounded-xl transition shadow-sm border whitespace-nowrap flex-shrink-0
+                                                ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
+                                        >
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                                            {hintsUsed >= 3 ? 'Sin pistas' : `Usar Pista (${3 - hintsUsed})`}
+                                        </button>
+                                    </div>
+                                    <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
+                                    
                                     {hintsUsed > 0 && (
-                                        <div className="mt-4 space-y-3">
+                                        <div className="pl-2 border-t border-border pt-4 mt-2 space-y-3">
                                             {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
                                                 <div key={idx} className="bg-warning-soft border-l-4 border-warning p-4 rounded-r-xl text-text-main text-sm shadow-sm animate-fade-in">
                                                     <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
@@ -400,7 +400,6 @@ setUserGrid(initialGrid);
                                         </div>
                                     )}
                                 </div>
-    </div>
 </GlowCard>
 
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
