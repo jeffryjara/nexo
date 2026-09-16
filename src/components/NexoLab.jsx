@@ -449,12 +449,12 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                                 if (!kMapDims) return <p className="text-warning">Karnaugh no está disponible para este número de variables.</p>;
                                                 
                                                 return (
-                                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden border border-border relative my-auto">
+                                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden border border-border relative">
                                                         <thead className="glass-panel">
                                                             <tr>
                                                                 <th className="p-3 border-b border-r border-border text-text-muted font-bold relative min-w-[60px]">
-                                                                    <span className="absolute bottom-1 left-2 text-xs">{kMapDims.colVars}</span>
-                                                                    <span className="absolute top-1 right-2 text-xs">{kMapDims.rowVars}</span>
+                                                                    <span className="absolute bottom-1 left-2 text-xs">{kMapDims.rowLabels}</span>
+                                                                    <span className="absolute top-1 right-2 text-xs">{kMapDims.colLabels}</span>
                                                                     <svg className="absolute inset-0 w-full h-full text-border" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" strokeWidth="1"/></svg>
                                                                 </th>
                                                                 {kMapDims.cols.map((c, i) => (
@@ -469,19 +469,19 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                                                     {kMapDims.cols.map((c, cIdx) => {
                                                                         const cellKey = r + c;
                                                                         return (
-                                                                            <td key={cellKey} className="p-0 border border-border">
-                                                                                <input
-                                                                                    type="text"
-                                                                                    maxLength={1}
-                                                                                    value={kmapValues[cellKey] || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const val = e.target.value;
-                                                                                        if (val === '0' || val === '1' || val === '') {
-                                                                                            setKmapValues(prev => ({...prev, [cellKey]: val}));
-                                                                                        }
+                                                                            <td key={cellKey} className="p-1 sm:p-3 border border-border">
+                                                                                <button
+                                                                                    onClick={() => {
+                                                                                        const current = kmapValues[cellKey] || '-';
+                                                                                        let next = '0';
+                                                                                        if (current === '0') next = '1';
+                                                                                        else if (current === '1') next = '0';
+                                                                                        setKmapValues(prev => ({...prev, [cellKey]: next}));
                                                                                     }}
-                                                                                    className="w-full h-full min-h-[50px] text-center bg-transparent focus:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/50 text-text-main font-bold text-lg"
-                                                                                />
+                                                                                    className={`w-12 h-12 sm:w-16 sm:h-14 text-xl sm:text-2xl rounded-xl font-bold transition-all shadow-sm border outline-none mx-auto flex items-center justify-center ${(kmapValues[cellKey] || '-') === '-' ? 'bg-transparent text-white/20 hover:bg-white/5 border-transparent shadow-none' : 'bg-transparent text-white border-accent'}`}
+                                                                                >
+                                                                                    {kmapValues[cellKey] || '-'}
+                                                                                </button>
                                                                             </td>
                                                                         );
                                                                     })}
@@ -514,22 +514,20 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
 
                                 
                                 <h3 className="text-lg font-bold text-text-main mb-4">3. Función Lógica Final</h3>
-                                <div className="flex items-center gap-4 mb-8">
-                                    <span className="text-3xl font-extrabold text-accent whitespace-nowrap min-w-[3rem] text-right flex-shrink-0">{output} =</span>
-                                    <input 
-                                        ref={finalRef}
-                                        type="text" 
-                                        value={userFinal}
-                                        onChange={(e) => setUserFinal(e.target.value)}
-                                        onFocus={() => { setActiveInput('final'); setIsKeyboardOpen(true); }}
-                                        placeholder="Ej: A'B + C" 
-                                        className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main font-mono font-bold transition-all"
-                                    />
-                                </div>
-
-                                
-                                <div className="flex flex-wrap items-center gap-4 justify-between w-full mt-6">
-                                    <button onClick={checkAnswer} className="bg-accent hover:bg-accent/90 text-white font-bold text-lg py-4 px-10 rounded-2xl shadow-lg transition-transform active:scale-95 border border-accent">
+                                <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
+                                    <div className="flex flex-1 items-center gap-4 w-full">
+                                        <span className="text-3xl font-extrabold text-accent whitespace-nowrap min-w-[3rem] text-right flex-shrink-0">{output} =</span>
+                                        <input 
+                                            ref={finalRef}
+                                            type="text" 
+                                            value={userFinal}
+                                            onChange={(e) => setUserFinal(e.target.value)}
+                                            onFocus={() => { setActiveInput('final'); setIsKeyboardOpen(true); }}
+                                            placeholder="Ej: A'B + C" 
+                                            className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main font-mono font-bold transition-all"
+                                        />
+                                    </div>
+                                    <button onClick={checkAnswer} className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white font-bold text-lg py-5 px-10 rounded-2xl shadow-lg transition-transform active:scale-95 border border-accent whitespace-nowrap">
                                         Comprobar Solución
                                     </button>
                                 </div>
