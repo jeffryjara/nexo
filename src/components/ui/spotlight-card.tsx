@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 interface GlowCardProps {
   children: ReactNode;
@@ -60,6 +61,29 @@ const GlowCard: React.FC<GlowCardProps> = ({
   }, []);
 
   const { base, spread } = glowColorMap[glowColor];
+
+  // --- 3D Tilt Animation Logic ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 15, stiffness: 150 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+  const rotateX = useTransform(springY, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const { width, height, left, top } = rect;
+    const xPct = (e.clientX - left) / width - 0.5;
+    const yPct = (e.clientY - top) / height - 0.5;
+    mouseX.set(xPct);
+    mouseY.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   // Determine sizing
   const getSizeClasses = () => {
@@ -182,10 +206,12 @@ const GlowCard: React.FC<GlowCardProps> = ({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: beforeAfterStyles }} />
-      <div
+      <motion.div
         ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         data-glow
-        style={getInlineStyles()}
+        style={{ ...getInlineStyles(), rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
         className={`
           ${getSizeClasses()}
           ${!customSize ? 'aspect-[3/4]' : ''}
@@ -202,7 +228,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
       >
         <div ref={innerRef} data-glow></div>
         {children}
-      </div>
+      </motion.div>
     </>
   );
 };
