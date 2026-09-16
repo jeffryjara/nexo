@@ -542,9 +542,8 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 
                                     <div className="relative w-full">
                                     {!userSteps && (
-                                        <div className="absolute top-5 left-5 pointer-events-none text-text-muted/60 text-lg font-mono leading-relaxed">
-                                            Ej:<br/>
-                                            <span className="text-accent font-bold">{output}</span> = A'B + B'C + C'A
+                                        <div className="absolute top-5 left-5 pointer-events-none text-text-muted/50 text-2xl font-mono font-bold">
+                                            <span className="text-accent">{output}</span> = A'B + B'C + C'A
                                         </div>
                                     )}
                                     <textarea 
@@ -552,7 +551,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         value={userSteps}
                                         onChange={(e) => setUserSteps(e.target.value)}
                                         onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
-                                        className="w-full h-52 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-lg leading-relaxed transition-all"
+                                        className="w-full h-52 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-2xl font-bold transition-all"
                                     />
                                 </div>
                             </div>
@@ -570,7 +569,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             value={userFinal}
                                             onChange={(e) => setUserFinal(e.target.value)}
                                             onFocus={() => { setActiveInput('final'); setIsKeyboardOpen(true); }}
-                                            placeholder="Ej: A + B + C" 
+                                            placeholder="A + B + C" 
                                             className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main font-mono font-bold transition-all"
                                         />
                                     </div>
