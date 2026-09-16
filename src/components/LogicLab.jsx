@@ -8,7 +8,16 @@ export default function LogicLab() {
 
             
 
-            const [currentIndex, setCurrentIndex] = useState(0);
+                const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const [currentIndex, setCurrentIndex] = useState(0);
             const currentProblem = todosLosProblemas[currentIndex];
             
             
@@ -335,8 +344,15 @@ setUserGrid(initialGrid);
 
             return (
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
-                    <div className="sticky top-0 z-50 bg-transparent backdrop-blur-[24px] border-b border-white/10 py-6 px-6 md:px-12 -mx-6 md:-mx-12 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
+                    <div 
+                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                            scrolled 
+                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-black/80 border border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.6)]' 
+                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-white/[0.02] border-b border-x border-white/5'
+                        }`} 
+                        style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
+                    >
+                        <div className="w-full flex items-center justify-between">
                             <div>
                                 <div className="flex items-center gap-4">
                                         <a href="/" className="text-text-muted hover:text-white transition-colors p-2 -ml-2 rounded-lg hover:bg-white/5" title="Volver a Mis Cursos">
@@ -391,7 +407,7 @@ setUserGrid(initialGrid);
                                                 {inputs.map((inp, i) => (
                                                     <th key={i} className="py-2 px-4 sm:py-3 sm:px-8 border-b border-border text-text-main font-extrabold text-lg">{inp}</th>
                                                 ))}
-                                                <th className="py-2 px-4 sm:py-3 sm:px-8 border-b border-border text-indigo-400 font-extrabold text-lg border-l-2 border-accent-soft bg-accent-soft">{output}</th>
+                                                <th className="py-2 px-4 sm:py-3 sm:px-8 border-b border-border text-white font-extrabold text-lg border-l-2 border-accent-soft bg-accent-soft">{output}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -603,7 +619,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
 
                                 {showSolution && status === 'error' && (
                                     <div className="mt-6 p-6 bg-surface hover:bg-accent-soft text-text-main rounded-2xl shadow-2xl border border-border animate-[fadeIn_0.3s_ease-out]">
-                                        <h4 className="font-bold text-indigo-400 mb-4 flex items-center gap-2 text-lg">
+                                        <h4 className="font-bold text-white mb-4 flex items-center gap-2 text-lg">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h4l3-9 5 18 3-9h5"/></svg>
                                             Solución Paso a Paso
                                         </h4>
@@ -675,7 +691,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                     {inputs.map(v => (
                                         <button key={v} onClick={() => handleKeyboardClick(v)} className="col-span-2 bg-surface hover:bg-accent-soft text-text-main font-black text-2xl py-3 rounded-xl shadow-sm border border-border transition-colors active:scale-95">{v}</button>
                                     ))}
-                                    <button onClick={() => handleKeyboardClick(output)} className="col-span-2 bg-accent/10 hover:bg-accent/20 text-indigo-300 font-black text-2xl py-3 rounded-xl shadow-sm border border-indigo-500/30 transition-colors active:scale-95">{output}</button>
+                                    <button onClick={() => handleKeyboardClick(output)} className="col-span-2 bg-accent/10 hover:bg-accent/20 text-white font-black text-2xl py-3 rounded-xl shadow-sm border border-white/20 transition-colors active:scale-95">{output}</button>
                                     {Array.from({length: Math.max(0, 5 - (inputs.length + 1))}).map((_, i) => (
                                         <div key={'space'+i} className="col-span-2"></div>
                                     ))}
