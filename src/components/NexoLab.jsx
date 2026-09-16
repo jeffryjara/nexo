@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GlowCard } from './ui/spotlight-card';
+import { InductionBackground } from './ui/induction-button';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
 
@@ -370,13 +371,14 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <GlowCard tiltLevel="low" customSize={true} glowColor="purple" className="!bg-[#09090b] !border-none !p-0 !rounded-3xl !relative !overflow-hidden !w-full !shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
-    <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0%,transparent_50%,#a855f7_100%)] opacity-100 blur-[6px] z-0"></div>
-    <div className="absolute inset-[2px] bg-[#09090b] rounded-3xl z-0"></div>
-    <div className="absolute inset-[2px] bg-[#a855f7]/10 backdrop-blur-md rounded-3xl z-0"></div>
+                            <div className="relative rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
+    <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
+        <InductionBackground className="w-full h-full" />
+    </div>
+    <div className="absolute inset-0 bg-[#09090b]/40 backdrop-blur-[2px] z-0"></div>
     <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
-                                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
-                                        <h2 className="text-xl font-bold text-accent m-0">{currentProblem.title}</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
+                                        <h2 className="text-xl font-bold text-accent m-0 uppercase">{currentProblem.title}</h2>
                                         <button 
                                             onClick={useHint} 
                                             disabled={hintsUsed >= 3 || status === 'correct'}
@@ -399,8 +401,8 @@ setUserGrid(initialGrid);
                                             ))}
                                         </div>
                                     )}
-                                </div>
-</GlowCard>
+    </div>
+</div>
 
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
