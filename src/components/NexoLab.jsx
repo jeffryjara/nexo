@@ -400,7 +400,7 @@ setUserGrid(initialGrid);
                                     {hintsUsed > 0 && (
                                         <div className="pl-2 mt-4 space-y-3">
                                             {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
-                                                <div key={idx} className="bg-warning-soft border border-warning/20 border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
+                                                <div key={idx} className="bg-warning-soft border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
                                                     <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
                                                     <span className="font-medium text-base">{hint}</span>
                                                 </div>

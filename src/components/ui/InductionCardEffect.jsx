@@ -61,14 +61,19 @@ export function InductionCardEffect({ className = "" }) {
                 // Fondo transparente
                 vec4 col = vec4(0.0);
                 
-                float a = atan(p.y, p.x);
                 vec3 arcCol = vec3(0.0);
                 for (int i = 0; i < 6; i++) {
                     float fi = float(i);
                     float w = clamp(u_arcs - fi, 0.0, 1.0);
-                    float n1 = fbm(vec2(a * 2.4 + fi * 11.3, t * (1.6 + fi * 0.27) + fi * 53.1));
+                    
+                    // Reemplazamos el ángulo 'a' (atan) por coordenadas espaciales 'p' 
+                    // para evitar la costura (seam) abrupta en el eje X negativo (-PI a PI).
+                    vec2 noiseCoord1 = p * 4.0 + vec2(fi * 11.3, t * (1.6 + fi * 0.27) + fi * 53.1);
+                    vec2 noiseCoord2 = p * 3.0 + vec2(fi * 7.7, t * (0.9 + fi * 0.13) + fi * 19.0);
+                    
+                    float n1 = fbm(noiseCoord1);
                     float off = (n1 - 0.5) * (0.11 + u_flash * 0.1);
-                    float seg = smoothstep(0.35, 0.75, noise(vec2(a * 1.8 + fi * 7.7, t * (0.9 + fi * 0.13) + fi * 19.0)));
+                    float seg = smoothstep(0.35, 0.75, noise(noiseCoord2));
                     seg = 0.3 + 0.7 * seg;
                     
                     // Suavizar el brillo haciéndolo menos filoso
