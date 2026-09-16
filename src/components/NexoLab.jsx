@@ -767,7 +767,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             >
                                 <div className="flex items-center gap-2 pointer-events-none">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
-                                    <span className="font-bold text-sm tracking-widest uppercase">Teclado {activeInput === 'steps' ? 'Procedimiento' : 'Final'}</span>
+                                    <span className="font-bold text-sm tracking-widest uppercase">Teclado {activeInput === 'steps' ? 'Procedimiento' : 'Función'}</span>
                                 </div>
                                 <button onPointerDown={(e) => e.stopPropagation()} onClick={() => setIsKeyboardOpen(false)} className="bg-error hover:bg-error/90 text-text-main rounded-full w-8 h-8 flex items-center justify-center font-bold transition shadow">✕</button>
                             </div>
@@ -799,8 +799,8 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                     <button onClick={() => handleKeyboardClick('1')} className="col-span-1 bg-surface hover:bg-accent-soft hover:bg-surface hover:bg-accent-soft text-text-main font-bold py-3 rounded-xl shadow-sm border border-border active:scale-95">1</button>
                                     
                                     <button onClick={() => handleKeyboardClick(' ')} className="col-span-2 bg-surface hover:bg-accent-soft text-text-muted font-bold text-sm py-3 rounded-xl shadow-sm border border-border active:scale-95">Espacio</button>
-                                    <button onClick={() => handleKeyboardClick('Enter')} className="col-span-2 bg-accent hover:bg-accent/90 text-text-main font-bold text-sm py-3 rounded-xl shadow-sm border border-accent active:scale-95">Enter ↵</button>
-                                    <button onClick={() => handleKeyboardClick('Backspace')} className="col-span-2 bg-warning hover:bg-warning/90 text-text-main font-bold text-xl py-3 rounded-xl shadow-sm border border-warning active:scale-95 flex items-center justify-center">⌫</button>
+                                    <button onClick={() => handleKeyboardClick('Enter')} className="col-span-2 bg-accent hover:bg-accent/90 text-text-main font-bold text-sm py-3 rounded-xl shadow-sm border border-accent active:scale-95">Enter</button>
+                                    <button onClick={() => handleKeyboardClick('Backspace')} className="col-span-2 bg-error hover:bg-error/90 text-text-main font-bold text-xl py-3 rounded-xl shadow-sm border border-error active:scale-95 flex items-center justify-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"/><line x1="18" x2="12" y1="9" y2="15"/><line x1="12" x2="18" y1="9" y2="15"/></svg></button>
                                 </div>
                             </div>
                         </div>
