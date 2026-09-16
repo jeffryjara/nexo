@@ -83,44 +83,36 @@ import { GlowCard } from '../components/ui/spotlight-card';
         </footer>
     </div>
 
-    <!-- Overlay for transition -->
-    <div id="page-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-40 opacity-0 pointer-events-none transition-opacity duration-500" style="backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"></div>
+    
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('.course-link');
-            const overlay = document.getElementById('page-overlay');
+    
 
-            links.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    // Reset all other links immediately to prevent ghosting
-                    links.forEach(other => {
-                        if (other !== link) {
-                            other.style.zIndex = '';
-                        }
-                    });
+    <!-- Cinematic Overlay -->
+    <div class="fixed inset-0 bg-black/40 z-40 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" id="cinematic-overlay" style="backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);"></div>
 
-                    link.style.position = 'relative';
-                    link.style.zIndex = '50';
-                    
-                    overlay.classList.remove('opacity-0');
-                    overlay.classList.add('opacity-100');
-                });
+    <style>
+        /* Base transition for all cards */
+        .course-link {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 50; /* Always above the overlay */
+        }
 
-                link.addEventListener('mouseleave', () => {
-                    // Check if we are moving to another card immediately
-                    // If we are, the mouseenter of the new card will handle the overlay.
-                    // If not, we fade out the overlay.
-                    overlay.classList.remove('opacity-100');
-                    overlay.classList.add('opacity-0');
-                    
-                    setTimeout(() => {
-                        if (!link.matches(':hover')) {
-                            link.style.zIndex = '';
-                        }
-                    }, 500);
-                });
-            });
-        });
-    </script>
+        /* Hovered state for the active card */
+        .course-link:hover {
+            transform: scale(1.05);
+        }
+
+        /* When ANY card is hovered... */
+        body:has(.course-link:hover) #cinematic-overlay {
+            opacity: 1;
+        }
+
+        /* ...dim and blur all OTHER cards smoothly */
+        body:has(.course-link:hover) .course-link:not(:hover) {
+            opacity: 0.35;
+            filter: blur(8px);
+            transform: scale(0.95);
+        }
+    </style>
 </MainLayout>
