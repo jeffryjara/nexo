@@ -60,6 +60,7 @@ const [userGrid, setUserGrid] = useState([]);
             const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
             const [activeInput, setActiveInput] = useState(null); 
             const stepsRef = useRef(null);
+            const stepsUnderlayRef = useRef(null);
             const finalRef = useRef(null);
             const [kbPos, setKbPos] = useState({ x: 0, y: 0 });
             const [isDragging, setIsDragging] = useState(false);
@@ -540,18 +541,29 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                                 
                                 
-                                    <div className="relative w-full">
-                                    {!userSteps && (
-                                        <div className="absolute top-5 left-5 pointer-events-none opacity-40 text-white text-2xl font-mono font-bold">
-                                            <span className="text-accent">{output}</span> = A'B + B'C + C'A
-                                        </div>
-                                    )}
+                                    <div className="relative w-full h-52 bg-surface rounded-2xl border border-border dark:border-white/10 focus-within:glass-panel focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/20 transition-all overflow-hidden">
+                                    <div 
+                                        ref={stepsUnderlayRef}
+                                        className="absolute inset-0 p-5 font-mono text-2xl font-bold whitespace-pre-wrap break-words pointer-events-none overflow-hidden text-text-main"
+                                        aria-hidden="true"
+                                    >
+                                        {userSteps ? (
+                                            userSteps.split(new RegExp(`(${output})`, 'g')).map((part, i) => 
+                                                part === output ? <span key={i} className="text-accent">{part}</span> : <span key={i}>{part}</span>
+                                            )
+                                        ) : (
+                                            <span className="text-white/40">{output} = A'B + B'C + C'A</span>
+                                        )}
+                                    </div>
+                                    
                                     <textarea 
                                         ref={stepsRef}
                                         value={userSteps}
                                         onChange={(e) => setUserSteps(e.target.value)}
                                         onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
-                                        className="w-full h-52 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-2xl font-bold transition-all"
+                                        onScroll={(e) => { if (stepsUnderlayRef.current) stepsUnderlayRef.current.scrollTop = e.target.scrollTop; }}
+                                        spellCheck="false"
+                                        className="absolute inset-0 w-full h-full p-5 outline-none resize-none bg-transparent text-transparent caret-white font-mono text-2xl font-bold"
                                     />
                                 </div>
                             </div>
