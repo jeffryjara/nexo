@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
 
-export default function LogicLab() {
+export default function NexoLab() {
 
             
 
@@ -347,8 +347,8 @@ setUserGrid(initialGrid);
                     <div 
                         className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             scrolled 
-                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-black/80 border border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.6)]' 
-                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-white/[0.02] border-b border-x border-white/5'
+                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-[#0a0a0a]/90 border border-accent/30 shadow-[0_15px_30px_rgba(168,85,247,0.15)]' 
+                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-accent/5 border-b border-x border-accent/20'
                         }`} 
                         style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
                     >

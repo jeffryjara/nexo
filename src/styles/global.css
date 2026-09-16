@@ -10,8 +10,8 @@
     --text-main: #111111;
     color-scheme: dark;
     --text-muted: #666666;
-    --accent-color: #4338ca;
-    --accent-soft: #eef2ff;
+    --accent-color: #9333ea;
+    --accent-soft: #f3e8ff;
     --warning-color: #b45309;
     --warning-soft: #fffbeb;
     --error-color: #b91c1c;
@@ -28,8 +28,8 @@
     --border-color: rgba(255, 255, 255, 0.08);
     --text-main: #f7f8f8;
     --text-muted: #8a8f98;
-    --accent-color: #818cf8;
-    --accent-soft: rgba(99, 102, 241, 0.1);
+    --accent-color: #a855f7;
+    --accent-soft: rgba(168, 85, 247, 0.15);
     --warning-color: #f59e0b;
     --warning-soft: rgba(245, 158, 11, 0.1);
     --error-color: #f87171;
