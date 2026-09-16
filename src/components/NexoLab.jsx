@@ -586,7 +586,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main placeholder-white/40 font-mono font-bold transition-all"
                                         />
                                     </div>
-                                    <InteractiveHoverButton onClick={checkAnswer} text="Comprobar" />
+                                    <InteractiveHoverButton onClick={checkAnswer} text="Comprobar solución" />
                                 </div>
 
                                 
