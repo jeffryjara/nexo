@@ -502,10 +502,11 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="border-t border-white/5 pt-8 mb-4">
-                                    <h3 className="text-lg font-bold text-text-main mb-4">3. Procedimiento (Álgebra de Boole)</h3>
-                                    
+                            </div>
+                            
+                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="flex items-center justify-center mb-6">
+                                    <h3 className="text-2xl font-bold text-text-main text-center">Procedimiento (Álgebra de Boole)</h3>
                                 </div>
                                 
                                 
@@ -515,13 +516,14 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                     onChange={(e) => setUserSteps(e.target.value)}
                                     onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
                                     placeholder="Ej:\nS = T'P + TP\nS = P(T' + T)\n..." 
-                                    className="w-full h-40 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none mb-8 text-text-main font-mono text-lg leading-relaxed transition-all"
-                                    />
+                                    className="w-full h-40 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-lg leading-relaxed transition-all"
+                                />
+                            </div>
 
-                                
-
-                                
-                                <h3 className="text-lg font-bold text-text-main mb-4">3. Función Lógica Final</h3>
+                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="flex items-center justify-center mb-6">
+                                    <h3 className="text-2xl font-bold text-text-main text-center">Función Lógica Final</h3>
+                                </div>
                                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
                                     <div className="flex flex-1 items-center gap-4 w-full">
                                         <span className="text-3xl font-extrabold text-accent whitespace-nowrap min-w-[3rem] text-right flex-shrink-0">{output} =</span>
@@ -540,25 +542,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                     </button>
                                 </div>
 
-                                <div className="flex items-center justify-center gap-2 mt-12 border-t border-white/5 pt-8">
-                                    <button 
-                                        onClick={prevProblem} 
-                                        disabled={currentIndex === 0}
-                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
-                                    >
-                                        <span className="flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Problema Anterior</span>
-                                    </button>
-                                    <div className="bg-surface text-text-main border border-white/10 font-bold py-3 px-6 rounded-xl shadow-sm text-lg text-center min-w-[100px]">
-                                        {currentIndex + 1} / {todosLosProblemas.length}
-                                    </div>
-                                    <button 
-                                        onClick={nextProblem} 
-                                        disabled={currentIndex === todosLosProblemas.length - 1}
-                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
-                                    >
-                                        <span className="flex items-center gap-2">Siguiente Problema <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-                                    </button>
-                                </div>
+                                
 
 
                                 {/* BANNER DE ÉXITO Y BOTÓN SIGUIENTE */}
@@ -617,6 +601,29 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         </div>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Paginación en card separada */}
+                            <div className="glass-panel rounded-3xl p-6 shadow-lg flex justify-center" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="flex items-center justify-center gap-4 w-full max-w-lg">
+                                    <button 
+                                        onClick={prevProblem} 
+                                        disabled={currentIndex === 0}
+                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
+                                    >
+                                        <span className="flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Problema Anterior</span>
+                                    </button>
+                                    <div className="bg-surface text-text-main border border-white/10 font-bold py-3 px-6 rounded-xl shadow-sm text-lg text-center flex-1">
+                                        {currentIndex + 1} / {todosLosProblemas.length}
+                                    </div>
+                                    <button 
+                                        onClick={nextProblem} 
+                                        disabled={currentIndex === todosLosProblemas.length - 1}
+                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
+                                    >
+                                        <span className="flex items-center gap-2">Siguiente Problema <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
