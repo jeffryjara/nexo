@@ -6,7 +6,7 @@ import { GlowCard } from '../components/ui/spotlight-card';
 <MainLayout title="Nexo - Plataforma de Estudio">
     <div class="min-h-screen px-6 py-12 md:px-12 max-w-6xl mx-auto">
         <header class="mb-16 text-center animate-fade-in">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Nexo</h1>
+            <h1 class="text-6xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 tracking-tight mb-4 pb-2">Nexo</h1>
             <p class="text-lg text-text-muted">Selecciona un curso para continuar practicando.</p>
         </header>
 
@@ -68,8 +68,11 @@ import { GlowCard } from '../components/ui/spotlight-card';
                 <p class="text-sm text-text-muted flex-grow">Arquitectura de software, patrones de diseño y diagramas UML.</p>
                 </GlowCard>
             </a>
-        <!-- Firmas de los desarrolladores -->
-            <div class="glass-panel p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center text-center h-full " style="background-color: transparent; border-style: dashed;">
+        </div>
+
+        <footer class="mt-24 mb-8">
+            <!-- Firmas de los desarrolladores -->
+            <div class="glass-panel p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center text-center " style="background-color: transparent; border-style: dashed;">
                 <p class="text-text-muted text-sm uppercase tracking-widest font-semibold mb-4">Desarrollado por</p>
                 <div class="flex items-center gap-4 justify-center" style="font-family: 'Caveat', cursive;">
                     <span class="text-4xl text-white opacity-90 transform -rotate-2">J3T</span>
@@ -77,6 +80,7 @@ import { GlowCard } from '../components/ui/spotlight-card';
                     <span class="text-4xl text-white opacity-90 transform rotate-2">JuanHP</span>
                 </div>
             </div>
-        </div>
+        
+        </footer>
     </div>
 </MainLayout>
