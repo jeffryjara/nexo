@@ -696,7 +696,6 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                             </button>
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">⚠️</div>
                                 <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
                             </div>
                             <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
@@ -707,7 +706,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             </p>
                             <div className="flex gap-4">
                                 <button onClick={() => setClearTarget(null)} className="flex-1 px-5 py-3 rounded-xl font-bold text-text-main bg-surface border border-white/10 hover:bg-white/5 transition">Cancelar</button>
-                                <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-error hover:bg-error/90 border border-error transition">Sí, limpiar</button>
+                                <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-accent hover:bg-accent/90 border border-accent transition">Limpiar</button>
                             </div>
                         </div>
                     </div>

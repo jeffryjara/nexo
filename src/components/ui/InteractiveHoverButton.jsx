@@ -25,7 +25,11 @@ export const InteractiveHoverButton = React.forwardRef(({ text = "Button", class
         ></div>
         
         {/* Inner Container uses Grid to stack content and size to largest */}
-        <div className="relative z-10 grid h-full w-full place-items-center overflow-hidden rounded-[14px] bg-surface px-8 py-5">
+        <div className="relative z-10 grid h-full w-full place-items-center overflow-hidden rounded-[14px] px-8 py-5">
+            {/* Opaque Background layer to block gradient bleeding */}
+            <div className="absolute inset-0 bg-white dark:bg-black z-0"></div>
+            {/* Surface Background layer */}
+            <div className="absolute inset-0 bg-surface z-0"></div>
             
             {/* Expanding Background on Hover */}
             <div className="absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent transition-all duration-500 ease-out group-hover:h-[500px] group-hover:w-[500px] z-0"></div>
