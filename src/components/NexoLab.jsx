@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GlowCard } from './ui/spotlight-card';
 import { InductionCardEffect } from './ui/InductionCardEffect';
+import { InteractiveHoverButton } from './ui/InteractiveHoverButton';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
 
@@ -585,10 +586,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main placeholder-white/40 font-mono font-bold transition-all"
                                         />
                                     </div>
-                                    <button onClick={checkAnswer} className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white font-bold text-lg py-5 px-10 rounded-2xl shadow-lg transition-transform active:scale-95 border border-accent whitespace-nowrap flex items-center justify-center gap-3">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                        Comprobar
-                                    </button>
+                                    <InteractiveHoverButton onClick={checkAnswer} text="Comprobar" />
                                 </div>
 
                                 
