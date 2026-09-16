@@ -342,7 +342,36 @@ setUserGrid(initialGrid);
             const inputs = currentProblem.inputs;
             const output = currentProblem.output;
 
+
+        const handleClearTables = () => {
+            if (window.confirm("¿Estás seguro de limpiar las tablas?")) {
+                resetGrid(currentProblem);
+            }
+        };
+        const handleClearKMap = () => {
+            if (window.confirm("¿Estás seguro de limpiar el Mapa de Karnaugh?")) {
+                setKmapValues({});
+            }
+        };
+        const handleClearProcedimiento = () => {
+            if (window.confirm("¿Estás seguro de limpiar el Procedimiento?")) {
+                setUserSteps('');
+            }
+        };
+        const handleClearFinal = () => {
+            if (window.confirm("¿Estás seguro de limpiar la Función Lógica Final?")) {
+                setUserFinal('');
+            }
+        };
+
+        const renderClearBtn = (handler) => (
+            <button onClick={handler} className="text-text-muted hover:text-error transition ml-3 bg-surface p-2 rounded-full border border-white/5 shadow-sm hover:border-error/30" title="Limpiar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+        );
+
             return (
+
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
             <div 
                         className={`sticky z-50 mx-auto w-full mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -405,11 +434,11 @@ setUserGrid(initialGrid);
                                     )}
     </div>
 </div>
-
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+<div className="flex flex-col gap-1 w-full">
+<div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
                                     <div>
-                                        <h3 className="text-2xl font-bold text-text-main mb-6 text-center">Tabla de Verdad</h3>
+                                        <h3 className="text-2xl font-bold text-text-main mb-6 text-center flex items-center justify-center">Tabla de Verdad {renderClearBtn(handleClearTables)}</h3>
                                 
                                 
                                 <div className="overflow-x-auto flex justify-center">
@@ -449,7 +478,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                                     <div className="flex flex-col">
                                         <div className="flex items-center justify-center mb-6">
-                                            <h3 className="text-2xl font-bold text-text-main text-center">Mapa de Karnaugh</h3>
+                                            <h3 className="text-2xl font-bold text-text-main text-center flex items-center justify-center">Mapa de Karnaugh {renderClearBtn(handleClearKMap)}</h3>
                                         </div>
                                         <div className="overflow-x-auto flex justify-center items-start">
                                             {(() => {
@@ -504,9 +533,9 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                             </div>
                             
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                            <div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="flex items-center justify-center mb-6">
-                                    <h3 className="text-2xl font-bold text-text-main text-center">Procedimiento (Álgebra de Boole)</h3>
+                                    <h3 className="text-2xl font-bold text-text-main text-center">Procedimiento</h3>
                                 </div>
                                 
                                 
@@ -520,9 +549,9 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 />
                             </div>
 
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                            <div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="flex items-center justify-center mb-6">
-                                    <h3 className="text-2xl font-bold text-text-main text-center">Función Lógica Final</h3>
+                                    <h3 className="text-2xl font-bold text-text-main text-center flex items-center">Función Lógica Final {renderClearBtn(handleClearFinal)}</h3>
                                 </div>
                                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
                                     <div className="flex flex-1 items-center gap-4 w-full">
@@ -604,7 +633,9 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             </div>
 
                             {/* Paginación en card separada */}
-                            <div className="glass-panel rounded-3xl p-6 shadow-lg flex justify-center" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                            <div className="relative group rounded-b-3xl rounded-t-none overflow-hidden w-full flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-6">
+<InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
+<div className="relative z-10 flex w-full justify-center">
                                 <div className="flex items-center justify-center gap-4 w-full max-w-lg">
                                     <button 
                                         onClick={prevProblem} 
@@ -624,10 +655,11 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         <span className="flex items-center gap-2">Siguiente Problema <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
                                     </button>
                                 </div>
+                                </div>
                             </div>
                         </div>
-
-                        </div>
+                    </div>
+                </div>
         
             {showRules && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
