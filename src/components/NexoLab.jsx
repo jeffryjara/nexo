@@ -345,12 +345,12 @@ setUserGrid(initialGrid);
             return (
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
                     <div 
-                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] border-none ${
                             scrolled 
-                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-[#0a0a0a]/90 border border-accent/30 shadow-[0_15px_30px_rgba(168,85,247,0.15)]' 
-                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-accent/5 border-b border-x border-accent/20'
+                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-accent/40 shadow-[0_15px_30px_rgba(168,85,247,0.15)]' 
+                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-accent/10'
                         }`} 
-                        style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
+                        style={{ backdropFilter: scrolled ? 'blur(40px)' : 'blur(24px)', WebkitBackdropFilter: scrolled ? 'blur(40px)' : 'blur(24px)' }}
                     >
                         <div className="w-full flex items-center justify-between">
                             <div>
@@ -635,7 +635,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
 
                         {/* PANEL LATERAL: FORMULITAS */}
                         <div className="lg:col-span-1">
-                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 shadow-lg border border-border sticky top-8">
+                            <div className="glass-panel rounded-3xl p-6 shadow-lg sticky top-8">
                                 <div className="flex items-center gap-1 sm:p-3 mb-6">
                                     <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">💡</div>
                                     <h2 className="text-2xl font-extrabold text-text-main">Formulitas</h2>
