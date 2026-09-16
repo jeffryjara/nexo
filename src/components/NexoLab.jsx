@@ -345,12 +345,11 @@ setUserGrid(initialGrid);
             return (
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
                     <div 
-                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] border-none ${
+                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             scrolled 
-                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/25 shadow-none' 
-                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-[#a855f7]/5'
-                        }`} 
-                        style={{ backdropFilter: scrolled ? 'blur(64px)' : 'blur(24px)', WebkitBackdropFilter: scrolled ? 'blur(64px)' : 'blur(24px)' }}
+                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
+                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
+                        }`}
                     >
                         <div className="w-full flex items-center justify-between">
                             <div>
