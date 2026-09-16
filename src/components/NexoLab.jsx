@@ -351,8 +351,10 @@ setUserGrid(initialGrid);
 
         const executeClear = () => {
             if (clearTarget === 'tables') {
-                resetGrid(currentProblem);
-                setKmapValues({});
+                const numInputs = currentProblem.inputs.length;
+                const numRows = Math.pow(2, numInputs);
+                const initialGrid = Array.from({ length: numRows }, () => Array(numInputs + 1).fill("-"));
+                setUserGrid(initialGrid);
             } else if (clearTarget === 'kmap') {
                 setKmapValues({});
             } else if (clearTarget === 'procedimiento') {
@@ -534,7 +536,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             
                             <div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="flex items-center justify-center mb-6">
-                                    <h3 className="text-2xl font-bold text-text-main text-center">Procedimiento</h3>
+                                    <h3 className="text-2xl font-bold text-text-main text-center flex items-center justify-center">Procedimiento {renderClearBtn(handleClearProcedimiento)}</h3>
                                 </div>
                                 
                                 
@@ -633,31 +635,35 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                         </div> {/* CIERRE DE GAP-1 */}
 
                         {/* Paginación en card separada */}
-                            <div className="relative group rounded-full overflow-hidden w-full flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-4">
+                            <div className="w-full flex justify-center">
+                            <div className="relative group rounded-full overflow-hidden w-fit flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-4 px-10">
                             <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
                             <div className="relative z-10 flex w-full justify-center">
                                 <div className="flex items-center justify-center gap-6 w-auto flex-nowrap">
-                                    <button 
-                                        onClick={prevProblem} 
-                                        disabled={currentIndex === 0}
-                                        className="hover:text-white text-text-muted disabled:opacity-30 disabled:cursor-not-allowed font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
-                                    >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
-                                    </button>
+                                    {currentIndex > 0 && (
+                                        <button 
+                                            onClick={prevProblem} 
+                                            className="hover:text-white text-text-muted font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
+                                        >
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
+                                        </button>
+                                    )}
                                     
                                     <div className="text-white/50 font-bold text-sm tracking-widest whitespace-nowrap opacity-75">
                                         {currentIndex + 1} / {todosLosProblemas.length}
                                     </div>
                                     
-                                    <button 
-                                        onClick={nextProblem} 
-                                        disabled={currentIndex === todosLosProblemas.length - 1}
-                                        className="hover:text-white text-text-muted disabled:opacity-30 disabled:cursor-not-allowed font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
-                                    >
-                                        Siguiente <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                                    </button>
+                                    {currentIndex < todosLosProblemas.length - 1 && (
+                                        <button 
+                                            onClick={nextProblem} 
+                                            className="hover:text-white text-text-muted font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
+                                        >
+                                            Siguiente <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -677,7 +683,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
                             </div>
                             <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
-                                {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad y el Mapa de Karnaugh."}
+                                {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad."}
                                 {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
                                 {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
                                 {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
