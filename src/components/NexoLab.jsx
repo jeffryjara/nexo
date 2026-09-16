@@ -12,6 +12,7 @@ export default function NexoLab() {
 
                 const [scrolled, setScrolled] = useState(false);
     const [showRules, setShowRules] = useState(false);
+    const [clearTarget, setClearTarget] = useState(null);
     const [kmapValues, setKmapValues] = useState({});
     useEffect(() => {
         const handleScroll = () => {
@@ -343,25 +344,23 @@ setUserGrid(initialGrid);
             const output = currentProblem.output;
 
 
-        const handleClearTables = () => {
-            if (window.confirm("¿Estás seguro de limpiar las tablas?")) {
+        const handleClearTables = () => setClearTarget('tables');
+        const handleClearKMap = () => setClearTarget('kmap');
+        const handleClearProcedimiento = () => setClearTarget('procedimiento');
+        const handleClearFinal = () => setClearTarget('final');
+
+        const executeClear = () => {
+            if (clearTarget === 'tables') {
                 resetGrid(currentProblem);
-            }
-        };
-        const handleClearKMap = () => {
-            if (window.confirm("¿Estás seguro de limpiar el Mapa de Karnaugh?")) {
                 setKmapValues({});
-            }
-        };
-        const handleClearProcedimiento = () => {
-            if (window.confirm("¿Estás seguro de limpiar el Procedimiento?")) {
+            } else if (clearTarget === 'kmap') {
+                setKmapValues({});
+            } else if (clearTarget === 'procedimiento') {
                 setUserSteps('');
-            }
-        };
-        const handleClearFinal = () => {
-            if (window.confirm("¿Estás seguro de limpiar la Función Lógica Final?")) {
+            } else if (clearTarget === 'final') {
                 setUserFinal('');
             }
+            setClearTarget(null);
         };
 
         const renderClearBtn = (handler) => (
@@ -549,7 +548,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 />
                             </div>
 
-                            <div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                            <div className="glass-panel rounded-b-3xl rounded-t-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="flex items-center justify-center mb-6">
                                     <h3 className="text-2xl font-bold text-text-main text-center flex items-center">Función Lógica Final {renderClearBtn(handleClearFinal)}</h3>
                                 </div>
@@ -661,6 +660,35 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                     </div>
                 </div>
         
+
+            {clearTarget && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setClearTarget(null)}></div>
+                    <div className="relative group rounded-3xl overflow-hidden max-w-md w-full flex flex-col border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] bg-[#a855f7]/10 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]">
+                        <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
+                        <div className="relative z-10 p-8">
+                            <button onClick={() => setClearTarget(null)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                            </button>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">⚠️</div>
+                                <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
+                            </div>
+                            <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
+                                {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad y el Mapa de Karnaugh."}
+                                {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
+                                {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
+                                {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
+                            </p>
+                            <div className="flex gap-4">
+                                <button onClick={() => setClearTarget(null)} className="flex-1 px-5 py-3 rounded-xl font-bold text-text-main bg-surface border border-white/10 hover:bg-white/5 transition">Cancelar</button>
+                                <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-error hover:bg-error/90 border border-error transition">Sí, limpiar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {showRules && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRules(false)}></div>
