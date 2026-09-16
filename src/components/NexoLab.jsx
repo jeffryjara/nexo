@@ -630,30 +630,32 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                     </div>
                                 )}
                             </div>
+                        </div> {/* CIERRE DE GAP-1 */}
 
-                            {/* Paginación en card separada */}
-                            <div className="relative group rounded-b-3xl rounded-t-none overflow-hidden w-full flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-6">
-<InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
-<div className="relative z-10 flex w-full justify-center">
-                                <div className="flex items-center justify-center gap-4 w-full max-w-lg">
+                        {/* Paginación en card separada */}
+                            <div className="relative group rounded-full overflow-hidden w-full flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-4">
+                            <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
+                            <div className="relative z-10 flex w-full justify-center">
+                                <div className="flex items-center justify-center gap-6 w-auto flex-nowrap">
                                     <button 
                                         onClick={prevProblem} 
                                         disabled={currentIndex === 0}
-                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
+                                        className="hover:text-white text-text-muted disabled:opacity-30 disabled:cursor-not-allowed font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
                                     >
-                                        <span className="flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Problema Anterior</span>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
                                     </button>
-                                    <div className="bg-surface text-text-main border border-white/10 font-bold py-3 px-6 rounded-xl shadow-sm text-lg text-center flex-1">
+                                    
+                                    <div className="text-white/50 font-bold text-sm tracking-widest whitespace-nowrap opacity-75">
                                         {currentIndex + 1} / {todosLosProblemas.length}
                                     </div>
+                                    
                                     <button 
                                         onClick={nextProblem} 
                                         disabled={currentIndex === todosLosProblemas.length - 1}
-                                        className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
+                                        className="hover:text-white text-text-muted disabled:opacity-30 disabled:cursor-not-allowed font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
                                     >
-                                        <span className="flex items-center gap-2">Siguiente Problema <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+                                        Siguiente <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                                     </button>
-                                </div>
                                 </div>
                             </div>
                         </div>
