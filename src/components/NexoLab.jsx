@@ -434,7 +434,7 @@ setUserGrid(initialGrid);
     </div>
 </div>
 <div className="flex flex-col gap-1 w-full">
-<div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+<div className="glass-panel rounded-t-3xl rounded-b-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
                                     <div>
                                         <h3 className="text-2xl font-bold text-text-main mb-6 text-center flex items-center justify-center">Tabla de Verdad {renderClearBtn(handleClearTables)}</h3>
