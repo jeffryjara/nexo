@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GlowCard } from './ui/spotlight-card';
-import { InductionBackground } from './ui/induction-button';
+import { InductionCardEffect } from './ui/InductionCardEffect';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
 
@@ -371,14 +371,20 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <div className="relative rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)]">
-    <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-        <InductionBackground className="w-full h-full" />
-    </div>
-    <div className="absolute inset-0 bg-[#09090b]/40 backdrop-blur-[2px] z-0"></div>
+                            <div className="relative rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] bg-[#a855f7]/10 backdrop-blur-md">
+    <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
     <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
-                                        <h2 className="text-xl font-bold text-accent m-0 uppercase">{currentProblem.title}</h2>
+                                        <h2 className="text-xl font-bold text-accent m-0">
+                                            {currentProblem.title.includes(':') ? (
+                                                <>
+                                                    <span className="uppercase">{currentProblem.title.split(':')[0]}</span>
+                                                    :{currentProblem.title.split(':').slice(1).join(':')}
+                                                </>
+                                            ) : (
+                                                currentProblem.title
+                                            )}
+                                        </h2>
                                         <button 
                                             onClick={useHint} 
                                             disabled={hintsUsed >= 3 || status === 'correct'}
