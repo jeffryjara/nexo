@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { GlowCard } from './ui/spotlight-card';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
 
@@ -9,6 +10,8 @@ export default function NexoLab() {
             
 
                 const [scrolled, setScrolled] = useState(false);
+    const [showRules, setShowRules] = useState(false);
+    const [kmapValues, setKmapValues] = useState({});
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
@@ -360,6 +363,7 @@ setUserGrid(initialGrid);
                                         <h1 className="text-3xl font-extrabold text-text-main tracking-tight">Arquitectura del Computador</h1>
                                     </div>
                                 </div>
+                    <button onClick={() => setShowRules(true)} className="glass-panel px-5 py-2.5 rounded-xl font-bold text-sm text-accent hover:text-white transition flex items-center gap-2 border border-white/10 hover:bg-accent/20">💡 Reglas</button>
                         </div>
                     </div>
 
@@ -396,7 +400,9 @@ setUserGrid(initialGrid);
                             </div>
 
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
-                                <h3 className="text-lg font-bold text-text-main mb-4">1. Tabla de Verdad</h3>
+                                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
+                                    <div>
+                                        <h3 className="text-lg font-bold text-text-main mb-4">1. Tabla de Verdad</h3>
                                 
                                 
                                 <div className="overflow-x-auto mb-10 flex justify-center lg:justify-start">
@@ -433,90 +439,50 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
 
                                 
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-bold text-text-main">2. Procedimiento</h3>
-                                    <div className="flex bg-surface rounded-xl p-1 border border-border">
-                                        <button 
-                                            onClick={() => setProcedureMethod('boole')}
-                                            className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors ${procedureMethod === 'boole' ? 'bg-accent text-white shadow-sm' : 'text-text-muted hover:text-text-main'}`}
-                                        >
-                                            Álgebra de Boole
-                                        </button>
-                                        <button 
-                                            onClick={() => setProcedureMethod('karnaugh')}
-                                            className={`px-4 py-2 text-sm font-bold rounded-lg transition-colors ${procedureMethod === 'karnaugh' ? 'bg-accent text-white shadow-sm' : 'text-text-muted hover:text-text-main'}`}
-                                        >
-                                            Mapa de Karnaugh
-                                        </button>
-                                    </div>
                                 </div>
-                                
-                                {procedureMethod === 'boole' && (
-                                    <textarea 
-                                    ref={stepsRef}
-                                    value={userSteps}
-                                    onChange={(e) => setUserSteps(e.target.value)}
-                                    onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
-                                    placeholder="Ej:\nS = T'P + TP\nS = P(T' + T)\n..." 
-                                    className="w-full h-40 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none mb-8 text-text-main font-mono text-lg leading-relaxed transition-all"
-                                    />
-                                )}
-
-                                {procedureMethod === 'karnaugh' && (
-                                    <div className="mb-8 animate-fade-in">
-                                        <p className="text-sm text-text-muted mb-4 font-medium">Llena el mapa de Karnaugh. Luego agrupa visualmente los '1's y escribe la función simplificada en el Paso 3.</p>
-                                        <div className="overflow-x-auto flex justify-center lg:justify-start">
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-lg font-bold text-text-main">2. Mapa de Karnaugh</h3>
+                                        </div>
+                                        <div className="overflow-x-auto flex justify-center lg:justify-start flex-1">
                                             {(() => {
                                                 const kMapDims = getKMapDimensions(currentProblem.inputs.length);
                                                 if (!kMapDims) return <p className="text-warning">Karnaugh no está disponible para este número de variables.</p>;
                                                 
                                                 return (
-                                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden  border border-border relative">
+                                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden border border-border relative my-auto">
                                                         <thead className="glass-panel">
                                                             <tr>
-                                                                <th className="py-3 px-4 border-b border-r border-border text-text-muted font-bold relative min-w-[80px]">
-                                                                    <div className="absolute top-2 right-3 text-xs">{kMapDims.colLabels}</div>
-                                                                    <div className="absolute bottom-2 left-3 text-xs">{kMapDims.rowLabels}</div>
-                                                                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/></svg>
+                                                                <th className="p-3 border-b border-r border-border text-text-muted font-bold relative min-w-[60px]">
+                                                                    <span className="absolute bottom-1 left-2 text-xs">{kMapDims.colVars}</span>
+                                                                    <span className="absolute top-1 right-2 text-xs">{kMapDims.rowVars}</span>
+                                                                    <svg className="absolute inset-0 w-full h-full text-border" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" strokeWidth="1"/></svg>
                                                                 </th>
-                                                                {kMapDims.cols.map((col, i) => (
-                                                                    <th key={i} className="py-3 px-6 border-b border-border text-text-main font-bold">{col}</th>
+                                                                {kMapDims.cols.map((c, i) => (
+                                                                    <th key={"c"+i} className="p-3 border-b border-border text-text-main font-bold min-w-[50px]">{c}</th>
                                                                 ))}
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {kMapDims.rows.map((row, rIndex) => (
-                                                                <tr key={rIndex} className="border-b border-border last:border-0">
-                                                                    <th className="py-3 px-6 border-r border-border glass-panel text-text-main font-bold">{row}</th>
-                                                                    {kMapDims.cols.map((col, cIndex) => {
-                                                                        const cell = kMapGrid[rIndex] ? kMapGrid[rIndex][cIndex] : '-';
-                                                                        const decimalValue = parseInt(col + row, 2);
-                                                                        const correctValue = currentProblem.correctTable[decimalValue];
-                                                                        
-                                                                        let style = "w-12 h-12 sm:w-16 sm:h-14 text-xl sm:text-2xl rounded-xl font-bold transition-all outline-none ";
-                                                                        if (cell === '-') style += "border border-transparent !outline-none !shadow-none bg-transparent text-white/20 hover:bg-white/5";
-                                                                        else if (cell === correctValue) style += "shadow-sm border bg-transparent text-white border-green-500";
-                                                                        else style += "shadow-sm border bg-transparent text-white border-red-500";
-                                                                        
+                                                            {kMapDims.rows.map((r, rIdx) => (
+                                                                <tr key={"r"+rIdx}>
+                                                                    <th className="p-3 border-r border-border text-text-main font-bold glass-panel">{r}</th>
+                                                                    {kMapDims.cols.map((c, cIdx) => {
+                                                                        const cellKey = r + c;
                                                                         return (
-                                                                            <td key={cIndex} className="p-1 sm:p-3">
-                                                                                <button 
-                                                                                    style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 'none' } : {}}
-                                                                                    onClick={() => {
-                                                                                        const newK = [...kMapGrid];
-                                                                                        if (!newK[rIndex]) newK[rIndex] = Array(kMapDims.cols.length).fill('-');
-                                                                                        newK[rIndex] = [...newK[rIndex]];
-                                                                                        const current = newK[rIndex][cIndex];
-                                                                                        if (current === '-') newK[rIndex][cIndex] = 0;
-                                                                                        else if (current === 0) newK[rIndex][cIndex] = 1;
-                                                                                        else newK[rIndex][cIndex] = 0;
-                                                                                        setKMapGrid(newK);
-                                                                                        setStatus('idle');
+                                                                            <td key={cellKey} className="p-0 border border-border">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    maxLength={1}
+                                                                                    value={kmapValues[cellKey] || ''}
+                                                                                    onChange={(e) => {
+                                                                                        const val = e.target.value;
+                                                                                        if (val === '0' || val === '1' || val === '') {
+                                                                                            setKmapValues(prev => ({...prev, [cellKey]: val}));
+                                                                                        }
                                                                                     }}
-                                                                                    className={style}
-                                                                                >
-                                                                                    {cell}
-                                                                                </button>
+                                                                                    className="w-full h-full min-h-[50px] text-center bg-transparent focus:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/50 text-text-main font-bold text-lg"
+                                                                                />
                                                                             </td>
                                                                         );
                                                                     })}
@@ -528,7 +494,24 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             })()}
                                         </div>
                                     </div>
-                                )}
+                                </div>
+
+                                <div className="border-t border-white/5 pt-8 mb-4">
+                                    <h3 className="text-lg font-bold text-text-main mb-4">3. Procedimiento (Álgebra de Boole)</h3>
+                                    
+                                </div>
+                                
+                                
+                                    <textarea 
+                                    ref={stepsRef}
+                                    value={userSteps}
+                                    onChange={(e) => setUserSteps(e.target.value)}
+                                    onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
+                                    placeholder="Ej:\nS = T'P + TP\nS = P(T' + T)\n..." 
+                                    className="w-full h-40 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none mb-8 text-text-main font-mono text-lg leading-relaxed transition-all"
+                                    />
+
+                                
 
                                 
                                 <h3 className="text-lg font-bold text-text-main mb-4">3. Función Lógica Final</h3>
@@ -632,34 +615,41 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             </div>
                         </div>
 
-                        {/* PANEL LATERAL: FORMULITAS */}
-                        <div className="lg:col-span-1">
-                            <div className="glass-panel rounded-3xl p-6 shadow-lg sticky top-8">
-                                <div className="flex items-center gap-1 sm:p-3 mb-6">
-                                    <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">💡</div>
-                                    <h2 className="text-2xl font-extrabold text-text-main">Formulitas</h2>
-                                </div>
-                                <p className="text-text-muted text-base mb-6 leading-relaxed font-medium">Recuerda estas 3 reglas del Álgebra de Boole para simplificar:</p>
-                                
-                                <div className="space-y-4">
-                                    <div className="glass-panel p-5 rounded-2xl shadow-sm transition hover:bg-surface hover:border-accent-soft">
-                                        <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">1. Idempotencia</h4>
-                                        <p className="font-mono text-2xl text-text-main font-black">A + A = A</p>
-                                    </div>
-                                    <div className="glass-panel p-5 rounded-2xl shadow-sm transition hover:bg-surface hover:border-accent-soft">
-                                        <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">2. Complemento (Suma)</h4>
-                                        <p className="font-mono text-2xl text-text-main font-black">A + A' = 1</p>
-                                    </div>
-                                    <div className="glass-panel p-5 rounded-2xl shadow-sm transition hover:bg-surface hover:border-accent-soft">
-                                        <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">3. Complem. (Mult.)</h4>
-                                        <p className="font-mono text-2xl text-text-main font-black">A · A' = 0</p>
-                                    </div>
-                                </div>
+                        </div>
+        
+            {showRules && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRules(false)}></div>
+                    <div className="glass-panel relative rounded-3xl p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out]">
+                        <button onClick={() => setShowRules(false)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        </button>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">💡</div>
+                            <h2 className="text-2xl font-extrabold text-text-main">Reglas</h2>
+                        </div>
+                        <p className="text-text-muted text-base mb-6 leading-relaxed font-medium">Recuerda estas 3 reglas del Álgebra de Boole para simplificar:</p>
+                        
+                        <div className="space-y-4">
+                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
+                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">1. Idempotencia</h4>
+                                <p className="font-mono text-2xl text-text-main font-black">A + A = A</p>
+                            </div>
+                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
+                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">2. Complemento (Suma)</h4>
+                                <p className="font-mono text-2xl text-text-main font-black">A + A' = 1</p>
+                            </div>
+                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
+                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">3. Complem. (Mult.)</h4>
+                                <p className="font-mono text-2xl text-text-main font-black">A · A' = 0</p>
                             </div>
                         </div>
                     </div>
+                </div>
+            )}
 
-                    {/* TECLADO VIRTUAL FLOTANTE Y ARRASTRABLE */}
+
+            {/* TECLADO VIRTUAL FLOTANTE Y ARRASTRABLE */}
                     {isKeyboardOpen && (
                         <div 
                             className="fixed glass-panel border border-border dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl z-50 overflow-hidden flex flex-col"
