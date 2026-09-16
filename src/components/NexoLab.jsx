@@ -109,11 +109,7 @@ setUserGrid(initialGrid);
                     correctValue = currentProblem.correctTable[rIndex];
                 }
                 
-                if (cell === correctValue) {
-                    return baseStyle + "bg-transparent text-white border-green-500";
-                } else {
-                    return baseStyle + "bg-transparent text-white border-red-500";
-                }
+                return baseStyle + "bg-transparent text-white border-white/20 hover:border-white/40";
             };
 
             const toggleCell = (rIndex, cIndex) => {
@@ -417,7 +413,7 @@ setUserGrid(initialGrid);
                                 
                                 
                                 <div className="overflow-x-auto mb-10 flex justify-center lg:justify-start">
-                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden  border border-border">
+                                    <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border">
                                         <thead className="glass-panel">
                                             <tr>
                                                 {inputs.map((inp, i) => (
@@ -455,18 +451,18 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="text-lg font-bold text-text-main">2. Mapa de Karnaugh</h3>
                                         </div>
-                                        <div className="overflow-x-auto flex justify-center lg:justify-start flex-1">
+                                        <div className="overflow-x-auto flex justify-center lg:justify-start items-start">
                                             {(() => {
                                                 const kMapDims = getKMapDimensions(currentProblem.inputs.length);
                                                 if (!kMapDims) return <p className="text-warning">Karnaugh no está disponible para este número de variables.</p>;
                                                 
                                                 return (
-                                                    <table className="w-auto text-center border-collapse bg-surface rounded-2xl overflow-hidden border border-border relative">
+                                                    <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border relative h-max">
                                                         <thead className="glass-panel">
                                                             <tr>
-                                                                <th className="p-3 border-b border-r border-border text-text-muted font-bold relative min-w-[60px]">
-                                                                    <span className="absolute bottom-1 left-2 text-xs">{kMapDims.rowLabels}</span>
-                                                                    <span className="absolute top-1 right-2 text-xs">{kMapDims.colLabels}</span>
+                                                                <th className="p-3 border-b border-r border-border text-text-muted font-bold relative min-w-[80px] h-[60px]">
+                                                                    <span className="absolute bottom-2 left-3 text-xs">{kMapDims.rowLabels}</span>
+                                                                    <span className="absolute top-2 right-3 text-xs">{kMapDims.colLabels}</span>
                                                                     <svg className="absolute inset-0 w-full h-full text-border" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" strokeWidth="1"/></svg>
                                                                 </th>
                                                                 {kMapDims.cols.map((c, i) => (
