@@ -352,7 +352,7 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-6">
                             
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg relative overflow-hidden">
+                            <div className="glass-panel rounded-3xl p-8 shadow-lg relative overflow-hidden" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="absolute top-0 left-0 w-2 h-full bg-accent"></div>
                                 <h2 className="text-xl font-bold text-text-main mb-4 pl-2">{currentProblem.title}</h2>
                                 <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
@@ -381,7 +381,7 @@ setUserGrid(initialGrid);
                                 </div>
                             </div>
 
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg">
+                            <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <h3 className="text-lg font-bold text-text-main mb-4">1. Tabla de Verdad</h3>
                                 
                                 
@@ -648,11 +648,13 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                     {/* TECLADO VIRTUAL FLOTANTE Y ARRASTRABLE */}
                     {isKeyboardOpen && (
                         <div 
-                            className="fixed glass-panel border border-border dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl z-50 overflow-hidden flex flex-col"
+                            className="fixed bg-[#0a0f1c]/85 glass-panel border border-border dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl z-50 overflow-hidden flex flex-col"
                             style={{ 
                                 left: kbPos.x, top: kbPos.y, 
                                 width: '500px', maxWidth: '95vw',
-                                touchAction: 'none' 
+                                touchAction: 'none',
+                                backdropFilter: 'blur(24px)',
+                                WebkitBackdropFilter: 'blur(24px)'
                             }}
                         >
                             <div 
