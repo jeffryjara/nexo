@@ -367,12 +367,11 @@ setUserGrid(initialGrid);
                         </div>
                     </div>
 
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 space-y-6">
+                    <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
+                        <div className="flex flex-col space-y-8 w-full">
                             
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg relative overflow-hidden" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
-                                <div className="absolute top-0 left-0 w-2 h-full bg-accent"></div>
-                                <h2 className="text-xl font-bold text-text-main mb-4 pl-2">{currentProblem.title}</h2>
+                            <GlowCard customSize={true} glowColor="purple" className="!p-8 !rounded-3xl !relative !overflow-hidden !w-full !flex !flex-col !gap-2">
+                                                                <h2 className="text-xl font-bold text-text-main mb-4 pl-2">{currentProblem.title}</h2>
                                 <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
                                 
                                 <div className="pl-2 border-t border-border pt-4 mt-2">
@@ -397,7 +396,7 @@ setUserGrid(initialGrid);
                                         </div>
                                     )}
                                 </div>
-                            </div>
+                            </GlowCard>
 
                             <div className="glass-panel rounded-3xl p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
