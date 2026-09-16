@@ -92,21 +92,25 @@ import { GlowCard } from '../components/ui/spotlight-card';
             const overlay = document.getElementById('page-overlay');
 
             links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const href = link.getAttribute('href');
+                link.addEventListener('mouseenter', () => {
+                    link.style.position = 'relative';
+                    link.style.zIndex = '50';
                     
-                    // Pop the clicked card above the overlay
-                    link.classList.add('relative', 'z-50', 'scale-105');
-                    link.classList.remove('hover:-translate-y-2'); // remove hover jitter
-                    
-                    // Show overlay
                     overlay.classList.remove('opacity-0');
                     overlay.classList.add('opacity-100');
+                });
 
-                    // Navigate after animation finishes
+                link.addEventListener('mouseleave', () => {
+                    overlay.classList.remove('opacity-100');
+                    overlay.classList.add('opacity-0');
+                    
+                    // Remove z-index after the fade animation completes (500ms)
+                    // so the card doesn't suddenly drop behind the fading overlay.
                     setTimeout(() => {
-                        window.location.href = href;
+                        // Only remove if we haven't hovered back onto it
+                        if (!link.matches(':hover')) {
+                            link.style.zIndex = '';
+                        }
                     }, 500);
                 });
             });
