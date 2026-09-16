@@ -90,21 +90,23 @@ import { GlowCard } from '../components/ui/spotlight-card';
     
 
     <style>
-        /* Base transition for all cards */
+        /* Base transition for all cards (runs when removing hover) */
         .course-link {
-            transition: all 0.25s ease-out; /* Fast, snappy UX */
+            transition: all 0.05s ease-out; /* Instant recovery */
             position: relative;
             z-index: 50;
         }
 
         /* Hovered state for the active card */
         .course-link:hover {
-            transform: scale(1.03); /* Subtle pop */
+            transform: scale(1.03);
+            transition: all 0.2s ease-out; /* Smooth enter */
         }
 
-        /* Just blur the other cards, DO NOT darken them */
+        /* Just blur the other cards */
         body:has(.course-link:hover) .course-link:not(:hover) {
-            filter: blur(6px); /* Only blur, keeping them fully visible */
+            filter: blur(6px);
+            transition: filter 0.2s ease-out; /* Smooth blur enter */
         }
     </style>
 </MainLayout>
