@@ -19,12 +19,12 @@ const { title } = Astro.props;
     <title>{title || 'Plataforma de Estudio'}</title>
 </head>
 <body class="overflow-x-hidden antialiased relative">
-    <div id="global-spotlight" class="pointer-events-none fixed inset-0 z-[-1] transition-opacity duration-300 opacity-0" style="background: radial-gradient(600px circle at 0px 0px, rgba(255,255,255,0.06), transparent 40%);"></div>
+    <div id="global-spotlight" class="pointer-events-none fixed inset-0 z-[-1] transition-opacity duration-300 opacity-0" style="background: radial-gradient(600px circle at 0px 0px, rgba(255,255,255,0.12), transparent 40%);"></div>
     <script>
         document.addEventListener('mousemove', (e) => {
             const spotlight = document.getElementById('global-spotlight');
             if (spotlight) {
-                spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(255,255,255,0.05), transparent 40%)`;
+                spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(255,255,255,0.12), transparent 40%)`;
                 spotlight.style.opacity = '1';
             }
         });
