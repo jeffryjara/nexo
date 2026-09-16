@@ -412,7 +412,7 @@ setUserGrid(initialGrid);
                                         <h3 className="text-lg font-bold text-text-main mb-4">1. Tabla de Verdad</h3>
                                 
                                 
-                                <div className="overflow-x-auto mb-10 flex justify-center lg:justify-start">
+                                <div className="overflow-x-auto mb-10 flex justify-center">
                                     <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border">
                                         <thead className="glass-panel">
                                             <tr>
@@ -451,7 +451,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="text-lg font-bold text-text-main">2. Mapa de Karnaugh</h3>
                                         </div>
-                                        <div className="overflow-x-auto flex justify-center lg:justify-start items-start">
+                                        <div className="overflow-x-auto flex justify-center items-start">
                                             {(() => {
                                                 const kMapDims = getKMapDimensions(currentProblem.inputs.length);
                                                 if (!kMapDims) return <p className="text-warning">Karnaugh no está disponible para este número de variables.</p>;
@@ -460,24 +460,24 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                                     <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border relative h-max">
                                                         <thead className="glass-panel">
                                                             <tr>
-                                                                <th className="p-3 border-b border-r border-border text-text-muted font-bold relative min-w-[80px] h-[60px]">
+                                                                <th className="p-3 border-b-2 border-r-2 border-accent-soft bg-accent-soft text-white font-extrabold relative min-w-[80px] h-[60px]">
                                                                     <span className="absolute bottom-2 left-3 text-xs">{kMapDims.rowLabels}</span>
                                                                     <span className="absolute top-2 right-3 text-xs">{kMapDims.colLabels}</span>
-                                                                    <svg className="absolute inset-0 w-full h-full text-border" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" strokeWidth="1"/></svg>
+                                                                    <svg className="absolute inset-0 w-full h-full text-white/20" preserveAspectRatio="none"><line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" strokeWidth="1"/></svg>
                                                                 </th>
                                                                 {kMapDims.cols.map((c, i) => (
-                                                                    <th key={"c"+i} className="p-3 border-b border-border text-text-main font-bold min-w-[50px]">{c}</th>
+                                                                    <th key={"c"+i} className="p-3 border-b-2 border-accent-soft bg-accent-soft text-white font-extrabold text-lg min-w-[50px]">{c}</th>
                                                                 ))}
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {kMapDims.rows.map((r, rIdx) => (
-                                                                <tr key={"r"+rIdx}>
-                                                                    <th className="p-3 border-r border-border text-text-main font-bold glass-panel">{r}</th>
+                                                                <tr key={"r"+rIdx} className="hover:bg-accent-soft transition-colors border-b border-border last:border-0">
+                                                                    <th className="p-3 border-r-2 border-accent-soft bg-accent-soft text-white font-extrabold text-lg">{r}</th>
                                                                     {kMapDims.cols.map((c, cIdx) => {
                                                                         const cellKey = r + c;
                                                                         return (
-                                                                            <td key={cellKey} className="p-1 sm:p-3 border border-border">
+                                                                            <td key={cellKey} className="p-1 sm:p-3">
                                                                                 <button
                                                                                     onClick={() => {
                                                                                         const current = kmapValues[cellKey] || '-';
