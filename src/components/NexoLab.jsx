@@ -371,7 +371,7 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <div className="relative rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] bg-[#a855f7]/10 backdrop-blur-md">
+                            <div className="relative group rounded-3xl overflow-hidden w-full flex flex-col min-h-[300px] border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500">
     <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
     <div className="relative z-10 p-8 w-full flex flex-col h-full gap-2">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
@@ -392,15 +392,15 @@ setUserGrid(initialGrid);
                                                 ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
                                         >
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
-                                            {hintsUsed >= 3 ? 'Sin pistas' : `Usar Pista (${3 - hintsUsed})`}
+                                            {hintsUsed >= 3 ? 'Sin pistas' : `Pista (${3 - hintsUsed})`}
                                         </button>
                                     </div>
                                     <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
                                     
                                     {hintsUsed > 0 && (
-                                        <div className="pl-2 border-t border-border pt-4 mt-2 space-y-3">
+                                        <div className="pl-2 mt-4 space-y-3">
                                             {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
-                                                <div key={idx} className="bg-warning-soft border-l-4 border-warning p-4 rounded-r-xl text-text-main text-sm shadow-sm animate-fade-in">
+                                                <div key={idx} className="bg-warning-soft border border-warning/20 border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
                                                     <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
                                                     <span className="font-medium text-base">{hint}</span>
                                                 </div>

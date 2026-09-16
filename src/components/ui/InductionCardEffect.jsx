@@ -82,7 +82,7 @@ export function InductionCardEffect({ className = "" }) {
                 float outerMask = 1.0 - smoothstep(0.01, 0.1, d);
                 
                 // Reducir la intensidad general
-                vec3 finalRGB = arcCol * (0.4 + 0.25 * hover) * outerMask;
+                vec3 finalRGB = arcCol * (0.6 + 0.3 * hover) * outerMask;
                 
                 float ring = 0.004 / (abs(d) + 0.004);
                 finalRGB += vec3(0.6, 0.4, 0.8) * ring * u_flash * 1.0 * outerMask;
@@ -122,14 +122,14 @@ export function InductionCardEffect({ className = "" }) {
         window.addEventListener('resize', resize);
         resize();
 
-        let arcs = 1.5, arcsTarget = 1.5, flash = 0, crawl = 0;
+        let arcs = 3.5, arcsTarget = 3.5, flash = 0, crawl = 0;
         let last = performance.now();
         let frameId;
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Simulate continuous hover to keep arcs alive
-        const handleEnter = () => arcsTarget = 4.0;
-        const handleLeave = () => arcsTarget = 1.5;
+        const handleEnter = () => arcsTarget = 5.0;
+        const handleLeave = () => arcsTarget = 3.5;
         
         const parent = canvas.parentElement;
         if (parent) {
@@ -142,7 +142,7 @@ export function InductionCardEffect({ className = "" }) {
             last = now;
             arcs += (arcsTarget - arcs) * Math.min(1, dt * 5);
             flash *= Math.exp(-3.6 * dt);
-            crawl += dt * (0.2 + (arcs / 6) * 0.4 + flash * 2.0);
+            crawl += dt * (0.3 + (arcs / 6) * 0.6 + flash * 2.0);
             resize();
             gl.uniform2f(uRes, canvas.width, canvas.height);
             gl.uniform1f(uTime, reduced ? 3.0 : crawl);
