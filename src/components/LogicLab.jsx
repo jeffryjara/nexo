@@ -344,8 +344,7 @@ setUserGrid(initialGrid);
                                         </a>
                                         <h1 className="text-3xl font-extrabold text-text-main tracking-tight">Arquitectura del Computador</h1>
                                     </div>
-                                <p className="text-text-muted font-medium mt-1">Preparación Examen T1</p>
-                            </div>
+                                </div>
                         </div>
                     </div>
 
@@ -648,7 +647,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                     {/* TECLADO VIRTUAL FLOTANTE Y ARRASTRABLE */}
                     {isKeyboardOpen && (
                         <div 
-                            className="fixed bg-[#0a0f1c]/85 glass-panel border border-border dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl z-50 overflow-hidden flex flex-col"
+                            className="fixed glass-panel border border-border dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl z-50 overflow-hidden flex flex-col"
                             style={{ 
                                 left: kbPos.x, top: kbPos.y, 
                                 width: '500px', maxWidth: '95vw',
@@ -674,9 +673,10 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                             <div className="p-4 glass-panel">
                                 <div className="grid grid-cols-10 gap-2 mb-2">
                                     {inputs.map(v => (
-                                        <button key={v} onClick={() => handleKeyboardClick(v)} className="col-span-2 bg-surface hover:bg-accent-soft hover:bg-surface hover:bg-accent-soft text-text-main font-black text-2xl py-3 rounded-xl shadow-sm border border-border transition-colors active:scale-95">{v}</button>
+                                        <button key={v} onClick={() => handleKeyboardClick(v)} className="col-span-2 bg-surface hover:bg-accent-soft text-text-main font-black text-2xl py-3 rounded-xl shadow-sm border border-border transition-colors active:scale-95">{v}</button>
                                     ))}
-                                    {Array.from({length: Math.max(0, 5 - inputs.length)}).map((_, i) => (
+                                    <button onClick={() => handleKeyboardClick(output)} className="col-span-2 bg-accent/10 hover:bg-accent/20 text-indigo-300 font-black text-2xl py-3 rounded-xl shadow-sm border border-indigo-500/30 transition-colors active:scale-95">{output}</button>
+                                    {Array.from({length: Math.max(0, 5 - (inputs.length + 1))}).map((_, i) => (
                                         <div key={'space'+i} className="col-span-2"></div>
                                     ))}
                                 </div>
