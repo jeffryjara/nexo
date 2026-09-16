@@ -68,8 +68,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
   const springConfig = { damping: 15, stiffness: 150 };
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
-  const rotateX = useTransform(springY, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], ["-7deg", "7deg"]);
+  const rotateX = useTransform(springY, [-0.5, 0.5], ["18deg", "-18deg"]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], ["-18deg", "18deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -113,7 +113,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         var(--spotlight-size) var(--spotlight-size) at
         calc(var(--x, 0) * 1px)
         calc(var(--y, 0) * 1px),
-        hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.1)), transparent
+        rgba(255, 255, 255, var(--bg-spot-opacity, 0.1)), transparent
       )`,
       backgroundColor: 'var(--backdrop, transparent)',
       backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
@@ -165,7 +165,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
         calc(var(--x, 0) * 1px)
         calc(var(--y, 0) * 1px),
-        hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) / var(--border-spot-opacity, 1)), transparent 100%
+        rgba(255, 255, 255, var(--border-spot-opacity, 1)), transparent 100%
       );
       filter: brightness(2);
     }
@@ -175,7 +175,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
         calc(var(--x, 0) * 1px)
         calc(var(--y, 0) * 1px),
-        hsl(0 100% 100% / var(--border-light-opacity, 1)), transparent 100%
+        rgba(255, 255, 255, var(--border-light-opacity, 1)), transparent 100%
       );
     }
     
@@ -198,8 +198,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
     }
 
     .group:hover > [data-glow] {
-      --backup-border: var(--accent-color) !important;
-      box-shadow: 0 0 30px rgba(67,56,202,0.3) !important;
+      --backup-border: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1) !important;
     }
   `;
 

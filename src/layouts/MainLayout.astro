@@ -18,7 +18,21 @@ const { title } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>{title || 'Plataforma de Estudio'}</title>
 </head>
-<body class="overflow-x-hidden antialiased">
+<body class="overflow-x-hidden antialiased relative">
+    <div id="global-spotlight" class="pointer-events-none fixed inset-0 z-[-1] transition-opacity duration-300 opacity-0" style="background: radial-gradient(600px circle at 0px 0px, rgba(255,255,255,0.06), transparent 40%);"></div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const spotlight = document.getElementById('global-spotlight');
+            if (spotlight) {
+                spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(255,255,255,0.05), transparent 40%)`;
+                spotlight.style.opacity = '1';
+            }
+        });
+        document.addEventListener('mouseleave', () => {
+            const spotlight = document.getElementById('global-spotlight');
+            if (spotlight) spotlight.style.opacity = '0';
+        });
+    </script>
     <slot />
 </body>
 </html>
