@@ -356,7 +356,7 @@ setUserGrid(initialGrid);
                             <div>
                                 <div className="flex items-center gap-4">
                                         <a href="/" className="text-text-muted hover:text-white transition-colors p-2 -ml-2 rounded-lg hover:bg-white/5" title="Volver a Mis Cursos">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                                         </a>
                                         <h1 className="text-3xl font-extrabold text-text-main tracking-tight">Arquitectura del Computador</h1>
                                     </div>
@@ -559,7 +559,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         disabled={currentIndex === 0}
                                         className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
                                     >
-                                        &larr; Problema Anterior
+                                        <span className="flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Problema Anterior</span>
                                     </button>
                                     <div className="bg-surface text-text-main border border-white/10 font-bold py-3 px-6 rounded-xl shadow-sm text-lg text-center min-w-[100px]">
                                         {currentIndex + 1} / {todosLosProblemas.length}
@@ -569,7 +569,7 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         disabled={currentIndex === todosLosProblemas.length - 1}
                                         className="glass-panel hover:bg-accent-soft text-text-main disabled:opacity-30 disabled:cursor-not-allowed font-bold py-3 px-5 rounded-xl shadow-sm transition border border-white/5"
                                     >
-                                        Siguiente Problema &rarr;
+                                        <span className="flex items-center gap-2">Siguiente Problema <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
                                     </button>
                                 </div>
 
