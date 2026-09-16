@@ -9,7 +9,8 @@ interface GlowCardProps {
   size?: 'sm' | 'md' | 'lg';
   width?: string | number;
   height?: string | number;
-  customSize?: boolean; // When true, ignores size prop and uses width/height or className
+  customSize?: boolean;
+  tiltLevel?: 'high' | 'low' | 'none';
 }
 
 const glowColorMap = {
@@ -33,7 +34,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
   size = 'md',
   width,
   height,
-  customSize = false
+  customSize = false,
+  tiltLevel = 'high'
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -68,8 +70,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
   const springConfig = { damping: 15, stiffness: 150 };
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
-  const rotateX = useTransform(springY, [-0.5, 0.5], ["18deg", "-18deg"]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], ["-18deg", "18deg"]);
+    const rotateX = useTransform(springY, [-0.5, 0.5], tiltLevel === 'high' ? ["18deg", "-18deg"] : tiltLevel === 'low' ? ["4deg", "-4deg"] : ["0deg", "0deg"]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], tiltLevel === 'high' ? ["-18deg", "18deg"] : tiltLevel === 'low' ? ["-4deg", "4deg"] : ["0deg", "0deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();

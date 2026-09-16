@@ -348,10 +348,10 @@ setUserGrid(initialGrid);
             return (
                 <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
                     <div 
-                        className={`sticky z-50 mx-auto w-full max-w-6xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        className={`sticky z-50 mx-auto w-full mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             scrolled 
-                            ? 'top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
-                            : 'top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
+                            ? 'max-w-4xl top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
+                            : 'max-w-6xl top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
                         }`}
                     >
                         <div className="w-full flex items-center justify-between">
@@ -370,7 +370,7 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <GlowCard customSize={true} glowColor="purple" className="!p-8 !rounded-3xl !relative !overflow-hidden !w-full !flex !flex-col !gap-2">
+                            <GlowCard tiltLevel="low" customSize={true} glowColor="purple" className="!bg-[#a855f7]/10 !shadow-[0_8px_32px_rgba(168,85,247,0.15)] !backdrop-blur-md !border !border-white/5 !p-8 !rounded-3xl !relative !overflow-hidden !w-full !flex !flex-col !gap-2">
                                                                 <h2 className="text-xl font-bold text-text-main mb-4 pl-2">{currentProblem.title}</h2>
                                 <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-6">{currentProblem.description}</p>
                                 
