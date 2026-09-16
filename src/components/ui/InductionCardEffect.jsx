@@ -70,18 +70,23 @@ export function InductionCardEffect({ className = "" }) {
                     float off = (n1 - 0.5) * (0.11 + u_flash * 0.1);
                     float seg = smoothstep(0.35, 0.75, noise(vec2(a * 1.8 + fi * 7.7, t * (0.9 + fi * 0.13) + fi * 19.0)));
                     seg = 0.3 + 0.7 * seg;
-                    float g = 0.002 / (abs(d + off) + 0.002);
-                    // Colores lilas/morados para los arcos
-                    arcCol += (vec3(0.6, 0.1, 0.9) * g + vec3(0.8, 0.4, 1.0) * g * g * 0.55) * w * seg;
+                    
+                    // Suavizar el brillo haciéndolo menos filoso
+                    float g = 0.0015 / (abs(d + off) + 0.004);
+                    
+                    // Colores lilas/morados más tenues
+                    arcCol += (vec3(0.5, 0.1, 0.8) * g + vec3(0.6, 0.3, 0.9) * g * g * 0.3) * w * seg;
                 }
-                float outerMask = 1.0 - smoothstep(0.01, 0.05, d);
-                // Si está dentro de la tarjeta (d < 0), mantenemos arcCol pero muy tenue si queremos, o solo borde.
-                // En este caso, arcCol brilla en el borde (d=0).
                 
-                vec3 finalRGB = arcCol * (0.6 + 0.4 * hover) * outerMask;
-                float ring = 0.006 / (abs(d) + 0.006);
-                finalRGB += vec3(0.8, 0.5, 1.0) * ring * u_flash * 1.5 * outerMask;
-                finalRGB += vec3(0.7, 0.3, 0.9) * u_flash * 0.16 * outerMask;
+                // Difuminar más el borde exterior
+                float outerMask = 1.0 - smoothstep(0.01, 0.1, d);
+                
+                // Reducir la intensidad general
+                vec3 finalRGB = arcCol * (0.4 + 0.25 * hover) * outerMask;
+                
+                float ring = 0.004 / (abs(d) + 0.004);
+                finalRGB += vec3(0.6, 0.4, 0.8) * ring * u_flash * 1.0 * outerMask;
+                finalRGB += vec3(0.5, 0.2, 0.7) * u_flash * 0.1 * outerMask;
                 
                 // Opacidad basada en el brillo para que el centro sea transparente
                 float alpha = clamp(length(finalRGB), 0.0, 1.0);
@@ -117,14 +122,14 @@ export function InductionCardEffect({ className = "" }) {
         window.addEventListener('resize', resize);
         resize();
 
-        let arcs = 3.5, arcsTarget = 3.5, flash = 0, crawl = 0;
+        let arcs = 1.5, arcsTarget = 1.5, flash = 0, crawl = 0;
         let last = performance.now();
         let frameId;
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Simulate continuous hover to keep arcs alive
-        const handleEnter = () => arcsTarget = 6.0;
-        const handleLeave = () => arcsTarget = 3.5;
+        const handleEnter = () => arcsTarget = 4.0;
+        const handleLeave = () => arcsTarget = 1.5;
         
         const parent = canvas.parentElement;
         if (parent) {
@@ -137,7 +142,7 @@ export function InductionCardEffect({ className = "" }) {
             last = now;
             arcs += (arcsTarget - arcs) * Math.min(1, dt * 5);
             flash *= Math.exp(-3.6 * dt);
-            crawl += dt * (0.4 + (arcs / 6) * 0.8 + flash * 2.0);
+            crawl += dt * (0.2 + (arcs / 6) * 0.4 + flash * 2.0);
             resize();
             gl.uniform2f(uRes, canvas.width, canvas.height);
             gl.uniform1f(uTime, reduced ? 3.0 : crawl);
@@ -161,7 +166,8 @@ export function InductionCardEffect({ className = "" }) {
     return (
         <canvas 
             ref={canvasRef} 
-            className={`absolute inset-0 w-full h-full pointer-events-none block z-0 ${className}`} 
+            className={`absolute inset-0 w-full h-full pointer-events-none block z-0 animate-fade-in ${className}`} 
+            style={{ animationDelay: "0.5s", animationFillMode: "both" }}
             aria-hidden="true" 
         />
     );
