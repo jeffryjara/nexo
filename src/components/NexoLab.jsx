@@ -540,14 +540,21 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                                 
                                 
+                                    <div className="relative w-full">
+                                    {!userSteps && (
+                                        <div className="absolute top-5 left-5 pointer-events-none text-text-muted/60 text-lg font-mono leading-relaxed">
+                                            Ej:<br/>
+                                            <span className="text-accent font-bold">{output}</span> = A'B + B'C + C'A
+                                        </div>
+                                    )}
                                     <textarea 
-                                    ref={stepsRef}
-                                    value={userSteps}
-                                    onChange={(e) => setUserSteps(e.target.value)}
-                                    onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
-                                    placeholder="Ej:\nS = T'P + TP\nS = P(T' + T)\n..." 
-                                    className="w-full h-40 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-lg leading-relaxed transition-all"
-                                />
+                                        ref={stepsRef}
+                                        value={userSteps}
+                                        onChange={(e) => setUserSteps(e.target.value)}
+                                        onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
+                                        className="w-full h-52 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none resize-none text-text-main font-mono text-lg leading-relaxed transition-all"
+                                    />
+                                </div>
                             </div>
 
                             <div className="glass-panel rounded-b-3xl rounded-t-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
@@ -563,12 +570,13 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             value={userFinal}
                                             onChange={(e) => setUserFinal(e.target.value)}
                                             onFocus={() => { setActiveInput('final'); setIsKeyboardOpen(true); }}
-                                            placeholder="Ej: A'B + C" 
+                                            placeholder="Ej: A + B + C" 
                                             className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main font-mono font-bold transition-all"
                                         />
                                     </div>
-                                    <button onClick={checkAnswer} className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white font-bold text-lg py-5 px-10 rounded-2xl shadow-lg transition-transform active:scale-95 border border-accent whitespace-nowrap">
-                                        Comprobar Solución
+                                    <button onClick={checkAnswer} className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white font-bold text-lg py-5 px-10 rounded-2xl shadow-lg transition-transform active:scale-95 border border-accent whitespace-nowrap flex items-center justify-center gap-3">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                        Comprobar
                                     </button>
                                 </div>
 
