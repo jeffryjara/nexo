@@ -105,22 +105,22 @@
 
   /* Card Enter & Exit Transitions (Next / Prev / Random) */
   .animate-card-exit-left {
-      animation: cardExitLeft 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+      animation: cardExitLeft 0.13s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
   .animate-card-enter-right {
-      animation: cardEnterRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: cardEnterRight 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   .animate-card-exit-right {
-      animation: cardExitRight 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+      animation: cardExitRight 0.13s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
   .animate-card-enter-left {
-      animation: cardEnterLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: cardEnterLeft 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   .animate-card-exit-fade {
-      animation: cardExitFade 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
+      animation: cardExitFade 0.12s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
   .animate-card-enter-pop {
-      animation: springPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: springPop 0.24s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 
   /* Boundary Limits / Elastic Bounces */

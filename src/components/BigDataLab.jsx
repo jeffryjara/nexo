@@ -14,9 +14,9 @@ export default function BigDataLab() {
   const [shuffleSpin, setShuffleSpin] = useState(false);
   const [boundaryHit, setBoundaryHit] = useState(null); // 'start' | 'end' | null
   
-  // Transition locks to prevent animation collision
-  const isCardTransitioningRef = useRef(false);
+  // Touch and Gesture Tracking
   const touchCardStart = useRef({ x: 0, y: 0, time: 0 });
+  const isSwipingCardRef = useRef(false);
 
   // Apple Rubber-Band Overscroll Physics
   const [overscrollY, setOverscrollY] = useState(0);
@@ -146,9 +146,8 @@ export default function BigDataLab() {
   const currentCard = FLASHCARDS[currentCardIndex] || FLASHCARDS[0];
   const isCurrentMastered = currentCard ? masteredIds.includes(currentCard.id) : false;
 
-  // Next Card with Exit & Enter Animations
+  // Next Card (Boundary rubber-band limit at end)
   const handleNextCard = () => {
-    if (isCardTransitioningRef.current) return;
     setIsFlipped(false);
     
     if (currentCardIndex === FLASHCARDS.length - 1) {
@@ -162,22 +161,11 @@ export default function BigDataLab() {
       return;
     }
 
-    isCardTransitioningRef.current = true;
-    setCardAnimClass('animate-card-exit-left');
-
-    setTimeout(() => {
-      setCurrentCardIndex((prev) => prev + 1);
-      setCardAnimClass('animate-card-enter-right');
-      setTimeout(() => {
-        setCardAnimClass('');
-        isCardTransitioningRef.current = false;
-      }, 280);
-    }, 150);
+    setCurrentCardIndex((prev) => prev + 1);
   };
 
-  // Prev Card with Exit & Enter Animations
+  // Prev Card (Boundary rubber-band limit at start)
   const handlePrevCard = () => {
-    if (isCardTransitioningRef.current) return;
     setIsFlipped(false);
     
     if (currentCardIndex === 0) {
@@ -191,40 +179,20 @@ export default function BigDataLab() {
       return;
     }
 
-    isCardTransitioningRef.current = true;
-    setCardAnimClass('animate-card-exit-right');
-
-    setTimeout(() => {
-      setCurrentCardIndex((prev) => prev - 1);
-      setCardAnimClass('animate-card-enter-left');
-      setTimeout(() => {
-        setCardAnimClass('');
-        isCardTransitioningRef.current = false;
-      }, 280);
-    }, 150);
+    setCurrentCardIndex((prev) => prev - 1);
   };
 
-  // Random Card with Spring Pop
+  // Random Card with Dice Spin
   const handleRandomCard = () => {
-    if (isCardTransitioningRef.current || FLASHCARDS.length <= 1) return;
+    if (FLASHCARDS.length <= 1) return;
     let nextIdx = currentCardIndex;
     while (nextIdx === currentCardIndex) {
       nextIdx = Math.floor(Math.random() * FLASHCARDS.length);
     }
-    isCardTransitioningRef.current = true;
     setIsFlipped(false);
     setShuffleSpin(true);
-    setCardAnimClass('animate-card-exit-fade');
-
-    setTimeout(() => {
-      setCurrentCardIndex(nextIdx);
-      setCardAnimClass('animate-card-enter-pop');
-      setShuffleSpin(false);
-      setTimeout(() => {
-        setCardAnimClass('');
-        isCardTransitioningRef.current = false;
-      }, 280);
-    }, 130);
+    setTimeout(() => setShuffleSpin(false), 500);
+    setCurrentCardIndex(nextIdx);
   };
 
   const toggleMastered = () => {
@@ -246,6 +214,7 @@ export default function BigDataLab() {
       y: e.touches[0].clientY,
       time: Date.now()
     };
+    isSwipingCardRef.current = false;
   };
 
   const onCardTouchEnd = (e) => {
@@ -257,12 +226,22 @@ export default function BigDataLab() {
 
     // Detect horizontal swipe (>45px, more horizontal than vertical, under 400ms)
     if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4 && deltaTime < 400) {
+      isSwipingCardRef.current = true;
       if (deltaX < 0) {
         handleNextCard();
       } else {
         handlePrevCard();
       }
     }
+  };
+
+  const handleCardClick = () => {
+    // If user was swiping with finger, prevent synthetic click from flipping the card
+    if (isSwipingCardRef.current) {
+      isSwipingCardRef.current = false;
+      return;
+    }
+    setIsFlipped((prev) => !prev);
   };
 
   // Quiz Stats & Computed Values
@@ -480,12 +459,12 @@ export default function BigDataLab() {
             )}
 
             {/* 3D Flashcard Stage with Touch Swipe */}
-            <div className="w-full h-full flex justify-center [perspective:1600px]">
+            <div className={`w-full h-full flex justify-center [perspective:1600px] ${cardAnimClass}`}>
               <div
-                onClick={() => setIsFlipped(prev => !prev)}
+                onClick={handleCardClick}
                 onTouchStart={onCardTouchStart}
                 onTouchEnd={onCardTouchEnd}
-                className={`relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] select-none ${cardAnimClass}`}
+                className="relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] select-none"
                 style={{
                   transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                   transformStyle: 'preserve-3d',
