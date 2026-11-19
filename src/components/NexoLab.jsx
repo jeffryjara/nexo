@@ -544,11 +544,10 @@ setUserGrid(initialGrid);
                             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                                 <button 
                                     onClick={() => setClearTarget('all')} 
-                                    className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm touch-smooth"
+                                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-90 transition-all shadow-sm touch-smooth"
                                     title="Reiniciar ejercicio actual"
                                 >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                                    <span>Reiniciar</span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                                 </button>
 
                                 <button 

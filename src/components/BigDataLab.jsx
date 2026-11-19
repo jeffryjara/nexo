@@ -436,29 +436,27 @@ export default function BigDataLab() {
               </div>
             </div>
 
-            {/* Mobile Reiniciar: placed in top row right above the sections */}
+            {/* Mobile Reiniciar: icon only */}
             {activeTab === 'quiz' && (
               <button
                 onClick={() => setShowResetModal(true)}
-                className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-semibold text-xs text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0 touch-smooth"
+                className="sm:hidden w-8 h-8 rounded-full flex items-center justify-center text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-90 transition-all shadow-sm flex-shrink-0 touch-smooth"
                 title="Reiniciar cuestionario"
               >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                <span>Reiniciar</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
               </button>
             )}
           </div>
 
-          {/* Right: Reiniciar Button (desktop) + Apple Segmented Control */}
+          {/* Right: Reiniciar Button (desktop icon only) + Apple Segmented Control */}
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
             {activeTab === 'quiz' && (
               <button
                 onClick={() => setShowResetModal(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0 touch-smooth"
+                className="hidden sm:flex w-9 h-9 rounded-full items-center justify-center text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-90 transition-all shadow-sm flex-shrink-0 touch-smooth"
                 title="Reiniciar cuestionario"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                <span>Reiniciar</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
               </button>
             )}
 
@@ -633,13 +631,10 @@ export default function BigDataLab() {
             {currentQuiz && (
               <div className={`bg-[#141416] p-6 sm:p-9 rounded-[30px] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.4)] flex flex-col gap-6 transition-all duration-300 gpu-layer ${quizAnimClass}`}>
                 
-                {/* Category & Question Number */}
-                <div className="flex items-center justify-between gap-3">
+                {/* Category Pill */}
+                <div className="flex items-center">
                   <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
                     {currentQuiz.topic || currentQuiz.category}
-                  </span>
-                  <span className="text-xs font-mono text-white/40 font-medium">
-                    Pregunta {quizIndex + 1} de {QUIZ_QUESTIONS.length}
                   </span>
                 </div>
 
