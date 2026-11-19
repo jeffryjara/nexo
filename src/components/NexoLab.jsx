@@ -374,28 +374,44 @@ setUserGrid(initialGrid);
 
             return (
 
-                <div className="min-h-screen pb-6 md:pb-12 px-3 sm:px-6 md:px-12 relative max-w-full overflow-x-hidden">
-                    <div 
-                        className={`sticky z-50 mx-auto w-full mb-6 sm:mb-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                            scrolled 
-                            ? 'max-w-5xl top-2 sm:top-4 rounded-2xl sm:rounded-full px-4 sm:px-8 py-2.5 sm:py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
-                            : 'max-w-6xl top-0 rounded-b-2xl sm:rounded-b-[2.5rem] px-4 sm:px-10 py-3 sm:py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
-                        }`}
-                    >
-                        <div className="w-full flex items-center justify-between gap-2 sm:gap-4">
-                            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                                <a href="/" className="text-text-muted hover:text-white transition-colors p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-lg hover:bg-white/5 flex-shrink-0" title="Volver a Mis Cursos">
+                <div className="min-h-screen relative max-w-full">
+                    {/* Sticky Header with Back Button, Title, Dynamic Counter & Reglas Button */}
+                    <header className="sticky top-0 z-40 w-full bg-[#0a0a0c]/90 backdrop-blur-2xl border-b border-white/10 px-3 sm:px-6 py-2.5 sm:py-3 shadow-lg">
+                        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
+                            
+                            {/* Left: Back + Title + Dynamic Counter */}
+                            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                <a 
+                                    href="/" 
+                                    className="text-text-muted hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/5 flex-shrink-0" 
+                                    title="Volver a Mis Cursos"
+                                >
                                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                                 </a>
-                                <h1 className="text-base sm:text-2xl md:text-3xl font-extrabold text-text-main tracking-tight truncate">Arquitectura del Computador</h1>
+                                <div className="min-w-0">
+                                    <h1 className="text-sm sm:text-lg md:text-xl font-bold text-text-main tracking-tight truncate">
+                                        Arquitectura del Computador
+                                    </h1>
+                                    <div className="flex items-center gap-2 text-xs font-mono font-medium truncate">
+                                        <span className="text-[#c084fc]">
+                                            Problema {currentIndex + 1} de {todosLosProblemas.length}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <button onClick={() => setShowRules(true)} className="glass-panel px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white/50 hover:text-accent transition flex items-center gap-1.5 sm:gap-2 border border-white/10 hover:border-accent hover:bg-accent/10 flex-shrink-0">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Reglas
+
+                            {/* Right: Reglas button */}
+                            <button 
+                                onClick={() => setShowRules(true)} 
+                                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 transition-all flex-shrink-0"
+                            >
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                <span>Reglas</span>
                             </button>
                         </div>
-                    </div>
+                    </header>
 
-                    <div className="max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 w-full">
+                    <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-12 pt-4 sm:pt-6 pb-6 md:pb-12 flex flex-col gap-6 sm:gap-8 w-full">
                         <div className="flex flex-col space-y-6 sm:space-y-8 w-full">
                             
                             <div className="glass-panel rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
