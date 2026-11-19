@@ -529,32 +529,32 @@ export default function BigDataLab() {
                   </div>
                 )}
 
-                {/* Quick Jump Question Grid */}
-                <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2.5">
+                {/* Quick Jump Question Grid (Full Width Grid) */}
+                <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2.5 w-full">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono text-white/40">Navegación de preguntas:</span>
                     <span className="text-xs font-mono text-white/50">{answeredCount}/{QUIZ_QUESTIONS.length} respondidas</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="grid grid-cols-8 gap-1.5 sm:gap-2 w-full">
                     {QUIZ_QUESTIONS.map((q, idx) => {
                       const answered = typeof quizAnswers[q.id] === 'number';
                       const correct = quizAnswers[q.id] === q.correct;
                       const active = idx === quizIndex;
 
-                      let chipStyle = "bg-white/[0.04] text-white/40 border-white/[0.05]";
+                      let chipStyle = "bg-white/[0.04] text-white/40 border-white/[0.05] hover:bg-white/[0.08] hover:text-white";
                       if (active) {
-                        chipStyle = "bg-[#9333ea] text-white font-bold border-transparent shadow-sm scale-110";
+                        chipStyle = "bg-[#9333ea] text-white font-bold border-transparent shadow-sm scale-[1.04]";
                       } else if (answered) {
                         chipStyle = correct 
-                          ? "bg-[#30D158]/20 text-[#30D158] border-[#30D158]/30 font-semibold" 
-                          : "bg-[#FF453A]/20 text-[#FF453A] border-[#FF453A]/30 font-semibold";
+                          ? "bg-[#30D158]/20 text-[#30D158] border-[#30D158]/30 font-semibold hover:bg-[#30D158]/30" 
+                          : "bg-[#FF453A]/20 text-[#FF453A] border-[#FF453A]/30 font-semibold hover:bg-[#FF453A]/30";
                       }
 
                       return (
                         <button
                           key={q.id}
                           onClick={() => setQuizIndex(idx)}
-                          className={`w-8 h-8 rounded-xl text-xs font-mono border transition-all flex items-center justify-center hover:scale-105 active:scale-95 ${chipStyle}`}
+                          className={`w-full aspect-square sm:aspect-auto sm:h-10 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-mono border transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-90 ${chipStyle}`}
                           title={`Pregunta ${idx + 1}`}
                         >
                           {idx + 1}
