@@ -19,7 +19,7 @@ export default function BigDataLab() {
       const savedMastered = localStorage.getItem('nexo_bd_mastered');
       if (savedMastered) setMasteredIds(JSON.parse(savedMastered));
 
-      const savedAnswers = localStorage.getItem('nexo_bd_answers');
+      const savedAnswers = localStorage.getItem('nexo_bd_answers_v2');
       if (savedAnswers) setQuizAnswers(JSON.parse(savedAnswers));
     } catch (e) {
       // LocalStorage access fail silent
@@ -35,7 +35,7 @@ export default function BigDataLab() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('nexo_bd_answers', JSON.stringify(quizAnswers));
+      localStorage.setItem('nexo_bd_answers_v2', JSON.stringify(quizAnswers));
     } catch (e) {}
   }, [quizAnswers]);
 
