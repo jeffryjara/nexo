@@ -388,7 +388,6 @@ setUserGrid(initialGrid);
                 setProblemAnimClass('animate-card-exit-left');
                 setTimeout(() => {
                     setCurrentIndex(prev => prev + 1);
-                    window.scrollTo({ top: 0, behavior: 'instant' });
                     setProblemAnimClass('animate-card-enter-right');
                     setTimeout(() => {
                         setProblemAnimClass('');
@@ -412,7 +411,6 @@ setUserGrid(initialGrid);
                 setProblemAnimClass('animate-card-exit-right');
                 setTimeout(() => {
                     setCurrentIndex(prev => prev - 1);
-                    window.scrollTo({ top: 0, behavior: 'instant' });
                     setProblemAnimClass('animate-card-enter-left');
                     setTimeout(() => {
                         setProblemAnimClass('');
