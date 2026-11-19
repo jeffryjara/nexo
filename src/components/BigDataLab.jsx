@@ -291,6 +291,7 @@ export default function BigDataLab() {
     setQuizAnimClass('animate-card-exit-right');
     setTimeout(() => {
       setQuizIndex((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: 'instant' });
       setQuizAnimClass('animate-card-enter-left');
       setTimeout(() => {
         setQuizAnimClass('');
@@ -312,6 +313,7 @@ export default function BigDataLab() {
       setQuizAnimClass('animate-card-exit-left');
       setTimeout(() => {
         setQuizIndex((prev) => prev + 1);
+        window.scrollTo({ top: 0, behavior: 'instant' });
         setQuizAnimClass('animate-card-enter-right');
         setTimeout(() => {
           setQuizAnimClass('');
@@ -330,6 +332,7 @@ export default function BigDataLab() {
     setQuizAnimClass(isForward ? 'animate-card-exit-left' : 'animate-card-exit-right');
     setTimeout(() => {
       setQuizIndex(targetIdx);
+      window.scrollTo({ top: 0, behavior: 'instant' });
       setQuizAnimClass(isForward ? 'animate-card-enter-right' : 'animate-card-enter-left');
       setTimeout(() => {
         setQuizAnimClass('');
@@ -494,8 +497,8 @@ export default function BigDataLab() {
       <main 
         className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
           activeTab === 'flashcards'
-            ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-145px)] min-h-[460px] pt-2 pb-20 sm:pb-24 flex flex-col justify-center'
-            : 'pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6'
+            ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-140px)] min-h-[440px] pt-1 pb-16 sm:pb-20 flex flex-col justify-center overflow-hidden'
+            : 'pt-4 sm:pt-6 pb-28 sm:pb-32 flex flex-col gap-6 min-h-[calc(100dvh-140px)]'
         }`}
         style={{
           transform: `translate3d(0, ${overscrollY}px, 0)`,
