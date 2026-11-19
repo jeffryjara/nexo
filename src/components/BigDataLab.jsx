@@ -9,7 +9,6 @@ export default function BigDataLab() {
   
   // Fluid UI/UX Animation & Boundary Limit States
   const [cardAnimClass, setCardAnimClass] = useState('');
-  const [quizAnimClass, setQuizAnimClass] = useState('');
   const [masteredAnim, setMasteredAnim] = useState(false);
   const [unansweredWarn, setUnansweredWarn] = useState(false);
   const [shuffleSpin, setShuffleSpin] = useState(false);
@@ -17,7 +16,6 @@ export default function BigDataLab() {
   
   // Transition locks to prevent animation collision
   const isCardTransitioningRef = useRef(false);
-  const isQuizTransitioningRef = useRef(false);
   const touchCardStart = useRef({ x: 0, y: 0, time: 0 });
 
   // Apple Rubber-Band Overscroll Physics
@@ -281,26 +279,11 @@ export default function BigDataLab() {
   const percentage = Math.round((correctCount / QUIZ_QUESTIONS.length) * 100);
 
   const handlePrevQuiz = () => {
-    if (isQuizTransitioningRef.current) return;
-    if (quizIndex === 0) {
-      setQuizAnimClass('animate-boundary-left');
-      setTimeout(() => setQuizAnimClass(''), 450);
-      return;
-    }
-    isQuizTransitioningRef.current = true;
-    setQuizAnimClass('animate-card-exit-right');
-    setTimeout(() => {
-      setQuizIndex((prev) => prev - 1);
-      setQuizAnimClass('animate-card-enter-left');
-      setTimeout(() => {
-        setQuizAnimClass('');
-        isQuizTransitioningRef.current = false;
-      }, 280);
-    }, 150);
+    if (quizIndex === 0) return;
+    setQuizIndex((prev) => prev - 1);
   };
 
   const handleNextQuiz = () => {
-    if (isQuizTransitioningRef.current) return;
     if (!isCurrentAnswered) {
       // Tactile boundary limit: requires selecting an option first!
       setUnansweredWarn(true);
@@ -308,34 +291,15 @@ export default function BigDataLab() {
       return;
     }
     if (!isLastQuizQuestion) {
-      isQuizTransitioningRef.current = true;
-      setQuizAnimClass('animate-card-exit-left');
-      setTimeout(() => {
-        setQuizIndex((prev) => prev + 1);
-        setQuizAnimClass('animate-card-enter-right');
-        setTimeout(() => {
-          setQuizAnimClass('');
-          isQuizTransitioningRef.current = false;
-        }, 280);
-      }, 150);
+      setQuizIndex((prev) => prev + 1);
     } else {
       setShowResultsModal(true);
     }
   };
 
   const handleJumpToQuiz = (targetIdx) => {
-    if (isQuizTransitioningRef.current || targetIdx === quizIndex) return;
-    isQuizTransitioningRef.current = true;
-    const isForward = targetIdx > quizIndex;
-    setQuizAnimClass(isForward ? 'animate-card-exit-left' : 'animate-card-exit-right');
-    setTimeout(() => {
-      setQuizIndex(targetIdx);
-      setQuizAnimClass(isForward ? 'animate-card-enter-right' : 'animate-card-enter-left');
-      setTimeout(() => {
-        setQuizAnimClass('');
-        isQuizTransitioningRef.current = false;
-      }, 280);
-    }, 140);
+    if (targetIdx === quizIndex) return;
+    setQuizIndex(targetIdx);
   };
 
   const handleSelectQuizOption = (optIdx) => {
@@ -623,13 +587,13 @@ export default function BigDataLab() {
           </div>
         )}
 
-        {/* ================= QUIZ VIEW (SPRING MOTION & ENTER/EXIT FEEDBACK) ================= */}
+        {/* ================= QUIZ VIEW ================= */}
         {activeTab === 'quiz' && (
-          <div className="flex flex-col gap-6 w-full animate-fade-in overflow-hidden">
+          <div className="flex flex-col gap-6 w-full">
             
-            {/* Question Card with Spring Motion & Exit/Enter transitions */}
+            {/* Question Card */}
             {currentQuiz && (
-              <div className={`bg-[#141416] p-6 sm:p-9 rounded-[30px] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.4)] flex flex-col gap-6 transition-all duration-300 gpu-layer ${quizAnimClass}`}>
+              <div className="bg-[#141416] p-6 sm:p-9 rounded-[30px] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.4)] flex flex-col gap-6">
                 
                 {/* Category Pill */}
                 <div className="flex items-center">
