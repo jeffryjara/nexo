@@ -364,7 +364,7 @@ export default function BigDataLab() {
   }, [activeTab, FLASHCARDS.length, currentCardIndex, quizIndex, isCurrentAnswered, showResetModal, showResultsModal, currentCard]);
 
   return (
-    <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth overflow-x-hidden">
+    <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth">
       
       {/* 1. Apple-Inspired Frosted Glass Sticky Header (Optimized for Mobile GPU) */}
       <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)] gpu-layer">
@@ -456,13 +456,13 @@ export default function BigDataLab() {
 
       {/* 2. Main Content Area with Apple Rubber-Band Overscroll Physics */}
       <main 
-        className={`max-w-4xl mx-auto px-3 sm:px-6 w-full overflow-x-hidden ${
+        className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
           activeTab === 'flashcards'
             ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-145px)] min-h-[460px] pt-2 pb-20 sm:pb-24 flex flex-col justify-center'
             : 'pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6'
         }`}
         style={{
-          transform: `translate3d(0, ${overscrollY}px, 0)`,
+          transform: overscrollY !== 0 ? `translate3d(0, ${overscrollY}px, 0)` : undefined,
           transition: isOverscrollReleasing ? 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)' : 'none',
           willChange: overscrollY !== 0 || isOverscrollReleasing ? 'transform' : 'auto'
         }}
@@ -470,7 +470,7 @@ export default function BigDataLab() {
         
         {/* ================= FLASHCARDS VIEW (FULL HEIGHT + SPRING MOTION & EXIT/ENTER) ================= */}
         {activeTab === 'flashcards' && (
-          <div className="relative flex flex-col justify-center w-full h-full max-h-[760px] animate-fade-in overflow-hidden">
+          <div className="relative flex flex-col justify-center w-full h-full max-h-[760px] animate-fade-in">
             
             {/* Boundary Limit Floating Indicator */}
             {boundaryHit && (
