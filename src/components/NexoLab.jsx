@@ -514,7 +514,7 @@ setUserGrid(initialGrid);
 
             return (
 
-                <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth">
+                <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth overflow-x-hidden">
                     {/* Apple Frosted Glass Sticky Header */}
                     <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)]">
                         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
@@ -564,14 +564,14 @@ setUserGrid(initialGrid);
 
                     {/* Main Workspace with Apple Rubber-Band Overscroll */}
                     <main 
-                        className="max-w-6xl mx-auto px-3 sm:px-6 md:px-12 pt-4 sm:pt-6 pb-28 sm:pb-36 flex flex-col gap-6 sm:gap-8 w-full"
+                        className="max-w-6xl mx-auto px-3 sm:px-6 md:px-12 pt-4 sm:pt-6 pb-28 sm:pb-36 flex flex-col gap-6 sm:gap-8 w-full overflow-x-hidden"
                         style={{
                             transform: overscrollY !== 0 ? `translate3d(0, ${overscrollY}px, 0)` : undefined,
                             transition: isOverscrollReleasing ? 'transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
                             willChange: overscrollY !== 0 ? 'transform' : 'auto'
                         }}
                     >
-                        <div className={`flex flex-col space-y-6 sm:space-y-8 w-full transition-all duration-300 ${problemAnimClass}`}>
+                        <div className={`flex flex-col space-y-6 sm:space-y-8 w-full transition-all duration-300 overflow-hidden ${problemAnimClass}`}>
                             
                             <div className="glass-panel rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
                                 <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
