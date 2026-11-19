@@ -1,18 +1,7 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import BigDataLab from '../components/BigDataLab.jsx';
 ---
-<MainLayout title="Curso en Construcción">
-    <div class="min-h-screen flex items-center justify-center px-6">
-        <div class="glass-panel p-10 md:p-16 rounded-3xl border border-white/10 text-center max-w-lg w-full animate-fade-in shadow-2xl">
-            <div class="bg-accent/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 ">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-4">Se añadirá contenido pronto...</h1>
-            <p class="text-text-muted mb-8">El material de este curso aún está en preparación. Vuelve más adelante.</p>
-            
-            <a href="/" class="inline-block bg-white hover:bg-gray-200 text-black font-extrabold text-lg py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all active:scale-95 border border-transparent">
-                <span class="flex items-center gap-2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg> Volver a Mis Cursos</span>
-            </a>
-        </div>
-    </div>
+<MainLayout title="Base de Datos y Big Data · Nexo">
+    <BigDataLab client:load />
 </MainLayout>
