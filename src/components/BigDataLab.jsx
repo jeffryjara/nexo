@@ -276,7 +276,7 @@ export default function BigDataLab() {
                       {currentCard?.term}
                     </h2>
                     <p className="text-text-muted text-sm sm:text-base max-w-lg">
-                      {currentCard?.definition_short}
+                      {currentCard?.subtitle || currentCard?.definition_short}
                     </p>
                   </div>
 
@@ -342,7 +342,7 @@ export default function BigDataLab() {
                 {/* Category & Tag */}
                 <div className="flex items-center justify-between gap-3">
                   <span className="px-3.5 py-1 rounded-full bg-accent/15 border border-accent/30 text-[#c084fc] font-mono text-xs font-semibold">
-                    {currentQuiz.category}
+                    {currentQuiz.topic || currentQuiz.category}
                   </span>
                   <span className="text-xs font-mono text-text-muted">
                     #{quizIndex + 1}
@@ -351,8 +351,17 @@ export default function BigDataLab() {
 
                 {/* Question Statement */}
                 <h2 className="text-lg sm:text-2xl font-bold text-white tracking-tight leading-snug">
-                  {currentQuiz.question}
+                  {currentQuiz.stem || currentQuiz.question}
                 </h2>
+
+                {/* Optional Question Code Snippet */}
+                {currentQuiz.code && (
+                  <div className="bg-black/60 rounded-xl p-3.5 border border-white/10 overflow-x-auto text-left">
+                    <pre className="font-mono text-xs sm:text-sm text-[#d8b4fe] whitespace-pre-wrap break-words">
+                      <code>{currentQuiz.code}</code>
+                    </pre>
+                  </div>
+                )}
 
                 {/* Multiple Choice Options */}
                 <div className="flex flex-col gap-3">
