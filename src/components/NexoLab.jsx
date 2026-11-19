@@ -374,33 +374,33 @@ setUserGrid(initialGrid);
 
             return (
 
-                <div className="min-h-screen pb-6 md:pb-12 px-6 md:px-12 relative">
-            <div 
-                        className={`sticky z-50 mx-auto w-full mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                <div className="min-h-screen pb-6 md:pb-12 px-3 sm:px-6 md:px-12 relative max-w-full overflow-x-hidden">
+                    <div 
+                        className={`sticky z-50 mx-auto w-full mb-6 sm:mb-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             scrolled 
-                            ? 'max-w-5xl top-4 rounded-full px-6 md:px-8 py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
-                            : 'max-w-6xl top-0 rounded-b-[2.5rem] px-6 md:px-10 py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
+                            ? 'max-w-5xl top-2 sm:top-4 rounded-2xl sm:rounded-full px-4 sm:px-8 py-2.5 sm:py-3 bg-[#a855f7]/30 backdrop-blur-[100px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10' 
+                            : 'max-w-6xl top-0 rounded-b-2xl sm:rounded-b-[2.5rem] px-4 sm:px-10 py-3 sm:py-5 bg-[#a855f7]/5 backdrop-blur-[24px] border-b border-white/5'
                         }`}
                     >
-                        <div className="w-full flex items-center justify-between">
-                            <div>
-                                <div className="flex items-center gap-4">
-                                        <a href="/" className="text-text-muted hover:text-white transition-colors p-2 -ml-2 rounded-lg hover:bg-white/5" title="Volver a Mis Cursos">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                                        </a>
-                                        <h1 className="text-3xl font-extrabold text-text-main tracking-tight">Arquitectura del Computador</h1>
-                                    </div>
-                                </div>
-                    <button onClick={() => setShowRules(true)} className="glass-panel px-5 py-2.5 rounded-xl font-bold text-sm text-white/50 hover:text-accent transition flex items-center gap-2 border border-white/10 hover:border-accent hover:bg-accent/10"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Reglas</button>
+                        <div className="w-full flex items-center justify-between gap-2 sm:gap-4">
+                            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                                <a href="/" className="text-text-muted hover:text-white transition-colors p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-lg hover:bg-white/5 flex-shrink-0" title="Volver a Mis Cursos">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                                </a>
+                                <h1 className="text-base sm:text-2xl md:text-3xl font-extrabold text-text-main tracking-tight truncate">Arquitectura del Computador</h1>
+                            </div>
+                            <button onClick={() => setShowRules(true)} className="glass-panel px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white/50 hover:text-accent transition flex items-center gap-1.5 sm:gap-2 border border-white/10 hover:border-accent hover:bg-accent/10 flex-shrink-0">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Reglas
+                            </button>
                         </div>
                     </div>
 
-                    <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
-                        <div className="flex flex-col space-y-8 w-full">
+                    <div className="max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 w-full">
+                        <div className="flex flex-col space-y-6 sm:space-y-8 w-full">
                             
-                            <div className="glass-panel rounded-3xl p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
-                                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
-                                    <h2 className="text-xl font-bold text-accent m-0">
+                            <div className="glass-panel rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
+                                    <h2 className="text-base sm:text-lg md:text-xl font-bold text-accent m-0 leading-snug">
                                         {currentProblem.title.includes(':') ? (
                                             <>
                                                 <span className="uppercase">{currentProblem.title.split(':')[0]}</span>
@@ -413,34 +413,34 @@ setUserGrid(initialGrid);
                                     <button 
                                         onClick={useHint} 
                                         disabled={hintsUsed >= 3 || status === 'correct'}
-                                        className={`flex items-center gap-2 font-bold py-2 px-4 rounded-xl transition shadow-sm border whitespace-nowrap flex-shrink-0
+                                        className={`flex items-center gap-1.5 sm:gap-2 font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl transition shadow-sm border whitespace-nowrap flex-shrink-0 text-xs sm:text-sm
                                             ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
                                     >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
                                         {hintsUsed >= 3 ? 'Sin pistas' : `Pista (${3 - hintsUsed})`}
                                     </button>
                                 </div>
-                                <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-0">{currentProblem.description}</p>
+                                <p className="text-text-muted whitespace-pre-line leading-relaxed text-sm sm:text-base md:text-lg mb-0">{currentProblem.description}</p>
                                 
                                 {hintsUsed > 0 && (
-                                    <div className="pl-2 mt-4 space-y-3">
+                                    <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
                                         {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
-                                            <div key={idx} className="bg-warning-soft border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
+                                            <div key={idx} className="bg-warning-soft border-l-4 border-l-warning p-3 sm:p-4 rounded-xl sm:rounded-2xl text-text-main text-xs sm:text-sm shadow-sm animate-fade-in">
                                                 <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
-                                                <span className="font-medium text-base">{hint}</span>
+                                                <span className="font-medium text-sm sm:text-base">{hint}</span>
                                             </div>
                                         ))}
                                     </div>
                                 )}
                             </div>
 <div className="flex flex-col gap-1 w-full">
-<div className="glass-panel rounded-t-3xl rounded-b-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
-                                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
+<div className="glass-panel rounded-t-3xl rounded-b-none p-4 sm:p-6 md:p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-6 sm:mb-10">
                                     <div>
-                                        <h3 className="text-2xl font-bold text-text-main mb-6 text-center flex items-center justify-center">Tabla de Verdad {renderClearBtn(handleClearTables)}</h3>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-text-main mb-4 sm:mb-6 text-center flex items-center justify-center">Tabla de Verdad {renderClearBtn(handleClearTables)}</h3>
                                 
                                 
-                                <div className="overflow-x-auto flex justify-center">
+                                <div className="overflow-x-auto max-w-full flex justify-center pb-2">
                                     <table className="w-auto text-center border-separate border-spacing-0 bg-surface rounded-2xl overflow-hidden border border-border">
                                         <thead className="glass-panel">
                                             <tr>
@@ -476,10 +476,10 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 
                                 </div>
                                     <div className="flex flex-col">
-                                        <div className="flex items-center justify-center mb-6">
-                                            <h3 className="text-2xl font-bold text-text-main text-center flex items-center justify-center">Mapa de Karnaugh {renderClearBtn(handleClearKMap)}</h3>
+                                        <div className="flex items-center justify-center mb-4 sm:mb-6">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-text-main text-center flex items-center justify-center">Mapa de Karnaugh {renderClearBtn(handleClearKMap)}</h3>
                                         </div>
-                                        <div className="overflow-x-auto flex justify-center items-start">
+                                        <div className="overflow-x-auto max-w-full flex justify-center items-start pb-2">
                                             {(() => {
                                                 const kMapDims = getKMapDimensions(currentProblem.inputs.length);
                                                 if (!kMapDims) return <p className="text-warning">Karnaugh no está disponible para este número de variables.</p>;
@@ -532,16 +532,16 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                             </div>
                             
-                            <div className="glass-panel rounded-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
-                                <div className="flex items-center justify-center mb-6">
-                                    <h3 className="text-2xl font-bold text-text-main text-center flex items-center justify-center">Procedimiento {renderClearBtn(handleClearProcedimiento)}</h3>
+                            <div className="glass-panel rounded-none p-4 sm:p-6 md:p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="flex items-center justify-center mb-4 sm:mb-6">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-text-main text-center flex items-center justify-center">Procedimiento {renderClearBtn(handleClearProcedimiento)}</h3>
                                 </div>
                                 
                                 
-                                    <div className="relative w-full h-52 bg-surface rounded-2xl border border-border dark:border-white/10 focus-within:glass-panel focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/20 transition-all overflow-hidden">
+                                <div className="relative w-full h-44 sm:h-52 bg-surface rounded-2xl border border-border dark:border-white/10 focus-within:glass-panel focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/20 transition-all overflow-hidden">
                                     <div 
                                         ref={stepsUnderlayRef}
-                                        className="absolute inset-0 p-5 font-mono text-2xl font-bold whitespace-pre-wrap break-words pointer-events-none overflow-hidden text-text-main"
+                                        className="absolute inset-0 p-3.5 sm:p-5 font-mono text-lg sm:text-2xl font-bold whitespace-pre-wrap break-words pointer-events-none overflow-hidden text-text-main"
                                         aria-hidden="true"
                                     >
                                         {userSteps ? (
@@ -560,18 +560,18 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                         onFocus={() => { setActiveInput('steps'); setIsKeyboardOpen(true); }}
                                         onScroll={(e) => { if (stepsUnderlayRef.current) stepsUnderlayRef.current.scrollTop = e.target.scrollTop; }}
                                         spellCheck="false"
-                                        className="absolute inset-0 w-full h-full p-5 outline-none resize-none bg-transparent text-transparent caret-white font-mono text-2xl font-bold"
+                                        className="absolute inset-0 w-full h-full p-3.5 sm:p-5 outline-none resize-none bg-transparent text-transparent caret-white font-mono text-lg sm:text-2xl font-bold"
                                     />
                                 </div>
                             </div>
 
-                            <div className="glass-panel rounded-b-3xl rounded-t-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
-                                <div className="flex items-center justify-center mb-6">
-                                    <h3 className="text-2xl font-bold text-text-main text-center flex items-center">Función Lógica Final {renderClearBtn(handleClearFinal)}</h3>
+                            <div className="glass-panel rounded-b-3xl rounded-t-none p-4 sm:p-6 md:p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
+                                <div className="flex items-center justify-center mb-4 sm:mb-6">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-text-main text-center flex items-center justify-center">Función Lógica Final {renderClearBtn(handleClearFinal)}</h3>
                                 </div>
-                                <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
-                                    <div className="flex flex-1 items-center gap-4 w-full">
-                                        <span className="text-3xl font-extrabold text-accent whitespace-nowrap min-w-[3rem] text-right flex-shrink-0">{output} =</span>
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 sm:mb-8 w-full">
+                                    <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0 flex-1">
+                                        <span className="text-2xl sm:text-3xl font-extrabold text-accent whitespace-nowrap flex-shrink-0">{output} =</span>
                                         <input 
                                             ref={finalRef}
                                             type="text" 
@@ -579,10 +579,10 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                             onChange={(e) => setUserFinal(e.target.value)}
                                             onFocus={() => { setActiveInput('final'); setIsKeyboardOpen(true); }}
                                             placeholder="A + B + C" 
-                                            className="flex-1 p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-2xl text-text-main placeholder-white/40 font-mono font-bold transition-all"
+                                            className="flex-1 min-w-0 w-full p-3.5 sm:p-5 rounded-2xl border border-border bg-surface dark:border-white/10 focus:glass-panel focus:border-accent focus:ring-4 focus:ring-accent/20 outline-none text-lg sm:text-2xl text-text-main placeholder-white/40 font-mono font-bold transition-all"
                                         />
                                     </div>
-                                    <InteractiveHoverButton onClick={checkAnswer} text="Comprobar solución" />
+                                    <InteractiveHoverButton onClick={checkAnswer} text="Comprobar solución" className="w-full sm:w-auto" />
                                 </div>
 
                                 
@@ -649,27 +649,27 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
 
                         {/* Paginación en card separada */}
                         <div className="w-full flex justify-center">
-                            <div className="glass-panel rounded-full p-4 px-8 border border-white/10 hover:border-white/20 shadow-lg flex items-center justify-center transition-all">
-                                <div className="flex items-center justify-center gap-6 w-auto flex-nowrap">
+                            <div className="glass-panel rounded-full p-3 sm:p-4 px-4 sm:px-8 border border-white/10 hover:border-white/20 shadow-lg flex items-center justify-center transition-all max-w-full">
+                                <div className="flex items-center justify-center gap-3 sm:gap-6 w-auto flex-nowrap">
                                     {currentIndex > 0 && (
                                         <button 
                                             onClick={prevProblem} 
-                                            className="hover:text-white text-text-muted font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
+                                            className="hover:text-white text-text-muted font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-full transition flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-xs sm:text-base"
                                         >
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
                                         </button>
                                     )}
                                     
-                                    <div className="text-white/50 font-bold text-sm tracking-widest whitespace-nowrap opacity-75">
+                                    <div className="text-white/50 font-bold text-xs sm:text-sm tracking-widest whitespace-nowrap opacity-75">
                                         {currentIndex + 1} / {todosLosProblemas.length}
                                     </div>
                                     
                                     {currentIndex < todosLosProblemas.length - 1 && (
                                         <button 
                                             onClick={nextProblem} 
-                                            className="hover:text-white text-text-muted font-bold py-2 px-4 rounded-full transition flex items-center gap-2 whitespace-nowrap"
+                                            className="hover:text-white text-text-muted font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-full transition flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-xs sm:text-base"
                                         >
-                                            Siguiente <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                            Siguiente <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                                         </button>
                                     )}
                                 </div>

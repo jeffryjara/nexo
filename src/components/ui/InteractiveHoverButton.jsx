@@ -5,7 +5,7 @@ export const InteractiveHoverButton = React.forwardRef(({ text = "Comprobar solu
     <button
       ref={ref}
       onClick={onClick}
-      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9333ea] via-[#a855f7] to-[#9333ea] bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold text-lg py-5 px-8 shadow-[0_4px_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] border border-purple-400/30 transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 w-full sm:w-auto min-w-[220px] cursor-pointer ${className || ""}`}
+      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9333ea] via-[#a855f7] to-[#9333ea] bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold text-base sm:text-lg py-3.5 sm:py-5 px-5 sm:px-8 shadow-[0_4px_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] border border-purple-400/30 transition-all duration-300 md:hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 w-full sm:w-auto min-w-0 sm:min-w-[220px] cursor-pointer ${className || ""}`}
       {...props}
     >
       {/* Shimmer light sweep effect on hover */}
