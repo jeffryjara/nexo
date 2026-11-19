@@ -176,46 +176,48 @@ export default function BigDataLab() {
                       Pregunta {quizIndex + 1} de {QUIZ_QUESTIONS.length}
                     </span>
                   )}
-
-                  {activeTab === 'quiz' && (
-                    <button
-                      onClick={() => setShowResetModal(true)}
-                      className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-white transition pl-2 border-l border-white/10"
-                      title="Reiniciar cuestionario"
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                      <span>Reiniciar</span>
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: Switcher Tabs (Flashcards | Quiz) */}
-          <div className="flex items-center p-1 rounded-full bg-surface/80 border border-white/10 shadow-inner w-full sm:w-auto">
-            <button
-              onClick={() => setActiveTab('flashcards')}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 ${
-                activeTab === 'flashcards'
-                  ? 'bg-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                  : 'text-text-muted hover:text-white'
-              }`}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="3"/><line x1="7" y1="10" x2="17" y2="10"/></svg>
-              <span>Flashcards</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('quiz')}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 ${
-                activeTab === 'quiz'
-                  ? 'bg-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                  : 'text-text-muted hover:text-white'
-              }`}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/></svg>
-              <span>Quiz</span>
-            </button>
+          {/* Right: Reiniciar Button + Switcher Tabs (Flashcards | Quiz) */}
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+            {activeTab === 'quiz' && (
+              <button
+                onClick={() => setShowResetModal(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 hover:bg-white/5 active:scale-95 transition-all shadow-sm flex-shrink-0"
+                title="Reiniciar cuestionario"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>Reiniciar</span>
+              </button>
+            )}
+
+            <div className="flex items-center p-1 rounded-full bg-surface/80 border border-white/10 shadow-inner w-full sm:w-auto">
+              <button
+                onClick={() => setActiveTab('flashcards')}
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 ${
+                  activeTab === 'flashcards'
+                    ? 'bg-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                    : 'text-text-muted hover:text-white'
+                }`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="3"/><line x1="7" y1="10" x2="17" y2="10"/></svg>
+                <span>Flashcards</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('quiz')}
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 ${
+                  activeTab === 'quiz'
+                    ? 'bg-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                    : 'text-text-muted hover:text-white'
+                }`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/></svg>
+                <span>Quiz</span>
+              </button>
+            </div>
           </div>
 
         </div>
