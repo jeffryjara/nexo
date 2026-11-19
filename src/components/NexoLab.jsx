@@ -14,13 +14,108 @@ export default function NexoLab() {
     const [showRules, setShowRules] = useState(false);
     const [clearTarget, setClearTarget] = useState(null);
     const [kmapValues, setKmapValues] = useState({});
+
+    // Apple Rubber-Band Overscroll Physics
+    const [overscrollY, setOverscrollY] = useState(0);
+    const [isOverscrollReleasing, setIsOverscrollReleasing] = useState(false);
+    const touchStartYRef = useRef(0);
+    const isTouchingRef = useRef(false);
+
+    // Problem Animation & Boundary Feedback
+    const [problemAnimClass, setProblemAnimClass] = useState('');
+    const isProblemTransitioningRef = useRef(false);
+    const [boundaryHit, setBoundaryHit] = useState(null);
+
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Apple Rubber-Band Overscroll Handlers
+    useEffect(() => {
+        const handleTouchStart = (e) => {
+            if (e.touches.length !== 1) return;
+            touchStartYRef.current = e.touches[0].clientY;
+            isTouchingRef.current = true;
+            setIsOverscrollReleasing(false);
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isTouchingRef.current || e.touches.length !== 1) return;
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - touchStartYRef.current;
+            const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+            const isAtTop = scrollY <= 1;
+            const isAtBottom = scrollY + clientHeight >= scrollHeight - 4;
+
+            if (isAtTop && deltaY > 0) {
+                const pull = Math.min(80, Math.pow(deltaY, 0.7) * 2.2);
+                setOverscrollY(pull);
+            } else if (isAtBottom && deltaY < 0) {
+                const pull = -Math.min(80, Math.pow(Math.abs(deltaY), 0.7) * 2.2);
+                setOverscrollY(pull);
+            } else if (overscrollY !== 0) {
+                setOverscrollY(0);
+            }
+        };
+
+        const handleTouchEnd = () => {
+            if (!isTouchingRef.current) return;
+            isTouchingRef.current = false;
+            if (overscrollY !== 0) {
+                setIsOverscrollReleasing(true);
+                setOverscrollY(0);
+                setTimeout(() => setIsOverscrollReleasing(false), 450);
+            }
+        };
+
+        let wheelTimeout = null;
+        const handleWheel = (e) => {
+            const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+            const isAtTop = scrollY <= 1;
+            const isAtBottom = scrollY + clientHeight >= scrollHeight - 4;
+
+            if (isAtTop && e.deltaY < -4) {
+                setOverscrollY(20);
+                setIsOverscrollReleasing(true);
+                if (wheelTimeout) clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    setOverscrollY(0);
+                    setTimeout(() => setIsOverscrollReleasing(false), 450);
+                }, 140);
+            } else if (isAtBottom && e.deltaY > 4) {
+                setOverscrollY(-20);
+                setIsOverscrollReleasing(true);
+                if (wheelTimeout) clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    setOverscrollY(0);
+                    setTimeout(() => setIsOverscrollReleasing(false), 450);
+                }, 140);
+            }
+        };
+
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('touchend', handleTouchEnd, { passive: true });
+        window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+        window.addEventListener('wheel', handleWheel, { passive: true });
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('touchcancel', handleTouchEnd);
+            window.removeEventListener('wheel', handleWheel);
+            if (wheelTimeout) clearTimeout(wheelTimeout);
+        };
+    }, [overscrollY]);
 
     const [currentIndex, setCurrentIndex] = useState(0);
             const currentProblem = todosLosProblemas[currentIndex];
@@ -279,15 +374,49 @@ setUserGrid(initialGrid);
 
 
             const nextProblem = () => {
-                if (currentIndex < todosLosProblemas.length - 1) {
-                    setCurrentIndex(currentIndex + 1);
+                if (isProblemTransitioningRef.current) return;
+                if (currentIndex === todosLosProblemas.length - 1) {
+                    setProblemAnimClass('animate-boundary-right');
+                    setBoundaryHit('end');
+                    setTimeout(() => {
+                        setProblemAnimClass('');
+                        setBoundaryHit(null);
+                    }, 450);
+                    return;
                 }
+                isProblemTransitioningRef.current = true;
+                setProblemAnimClass('animate-card-exit-left');
+                setTimeout(() => {
+                    setCurrentIndex(prev => prev + 1);
+                    setProblemAnimClass('animate-card-enter-right');
+                    setTimeout(() => {
+                        setProblemAnimClass('');
+                        isProblemTransitioningRef.current = false;
+                    }, 280);
+                }, 150);
             };
 
             const prevProblem = () => {
-                if (currentIndex > 0) {
-                    setCurrentIndex(currentIndex - 1);
+                if (isProblemTransitioningRef.current) return;
+                if (currentIndex === 0) {
+                    setProblemAnimClass('animate-boundary-left');
+                    setBoundaryHit('start');
+                    setTimeout(() => {
+                        setProblemAnimClass('');
+                        setBoundaryHit(null);
+                    }, 450);
+                    return;
                 }
+                isProblemTransitioningRef.current = true;
+                setProblemAnimClass('animate-card-exit-right');
+                setTimeout(() => {
+                    setCurrentIndex(prev => prev - 1);
+                    setProblemAnimClass('animate-card-enter-left');
+                    setTimeout(() => {
+                        setProblemAnimClass('');
+                        isProblemTransitioningRef.current = false;
+                    }, 280);
+                }, 150);
             };
 
             const handleKeyboardClick = (char) => {
@@ -344,7 +473,6 @@ setUserGrid(initialGrid);
             const inputs = currentProblem.inputs;
             const output = currentProblem.output;
 
-
         const handleClearTables = () => setClearTarget('tables');
         const handleClearKMap = () => setClearTarget('kmap');
         const handleClearProcedimiento = () => setClearTarget('procedimiento');
@@ -362,6 +490,18 @@ setUserGrid(initialGrid);
                 setUserSteps('');
             } else if (clearTarget === 'final') {
                 setUserFinal('');
+            } else if (clearTarget === 'all') {
+                const numInputs = currentProblem.inputs.length;
+                const numRows = Math.pow(2, numInputs);
+                const initialGrid = Array.from({ length: numRows }, () => Array(numInputs + 1).fill("-"));
+                setUserGrid(initialGrid);
+                setKmapValues({});
+                setUserSteps('');
+                setUserFinal('');
+                setStatus('idle');
+                setErrorMessages([]);
+                setShowSolution(false);
+                setHintsUsed(0);
             }
             setClearTarget(null);
         };
@@ -374,22 +514,22 @@ setUserGrid(initialGrid);
 
             return (
 
-                <div className="min-h-screen relative max-w-full">
-                    {/* Sticky Header with Back Button, Title, Dynamic Counter & Reglas Button */}
-                    <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)] gpu-layer">
+                <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth">
+                    {/* Apple Frosted Glass Sticky Header */}
+                    <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)]">
                         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
                             
                             {/* Left: Back + Title + Dynamic Counter */}
                             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                                 <a 
                                     href="/" 
-                                    className="text-text-muted hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/5 flex-shrink-0" 
+                                    className="text-white/60 hover:text-white transition-colors p-2 rounded-full hover:bg-white/[0.08] active:scale-95 flex-shrink-0 touch-smooth" 
                                     title="Volver a Mis Cursos"
                                 >
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                                 </a>
                                 <div className="min-w-0">
-                                    <h1 className="text-sm sm:text-lg md:text-xl font-bold text-text-main tracking-tight truncate">
+                                    <h1 className="text-[15px] sm:text-[18px] md:text-xl font-bold tracking-tight text-white truncate">
                                         Arquitectura del Computador
                                     </h1>
                                     <div className="flex items-center gap-2 text-xs font-mono font-medium truncate">
@@ -400,19 +540,39 @@ setUserGrid(initialGrid);
                                 </div>
                             </div>
 
-                            {/* Right: Reglas button */}
-                            <button 
-                                onClick={() => setShowRules(true)} 
-                                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 transition-all flex-shrink-0"
-                            >
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                                <span>Reglas</span>
-                            </button>
+                            {/* Right: Reiniciar button & Reglas button */}
+                            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                                <button 
+                                    onClick={() => setClearTarget('all')} 
+                                    className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm touch-smooth"
+                                    title="Reiniciar ejercicio actual"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                                    <span>Reiniciar</span>
+                                </button>
+
+                                <button 
+                                    onClick={() => setShowRules(true)} 
+                                    className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm touch-smooth"
+                                    title="Ver reglas del Álgebra de Boole"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                    <span>Reglas</span>
+                                </button>
+                            </div>
                         </div>
                     </header>
 
-                    <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-12 pt-4 sm:pt-6 pb-6 md:pb-12 flex flex-col gap-6 sm:gap-8 w-full">
-                        <div className="flex flex-col space-y-6 sm:space-y-8 w-full">
+                    {/* Main Workspace with Apple Rubber-Band Overscroll */}
+                    <main 
+                        className="max-w-6xl mx-auto px-3 sm:px-6 md:px-12 pt-4 sm:pt-6 pb-28 sm:pb-36 flex flex-col gap-6 sm:gap-8 w-full"
+                        style={{
+                            transform: overscrollY !== 0 ? `translate3d(0, ${overscrollY}px, 0)` : undefined,
+                            transition: isOverscrollReleasing ? 'transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                            willChange: overscrollY !== 0 ? 'transform' : 'auto'
+                        }}
+                    >
+                        <div className={`flex flex-col space-y-6 sm:space-y-8 w-full transition-all duration-300 ${problemAnimClass}`}>
                             
                             <div className="glass-panel rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
                                 <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
@@ -662,90 +822,123 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 )}
                             </div>
                         </div> {/* CIERRE DE GAP-1 */}
+                    </div>
+                </main>
 
-                        {/* Paginación en card separada */}
-                        <div className="w-full flex justify-center">
-                            <div className="glass-panel rounded-full p-3 sm:p-4 px-4 sm:px-8 border border-white/10 hover:border-white/20 shadow-lg flex items-center justify-center transition-all max-w-full">
-                                <div className="flex items-center justify-center gap-3 sm:gap-6 w-auto flex-nowrap">
-                                    {currentIndex > 0 && (
-                                        <button 
-                                            onClick={prevProblem} 
-                                            className="hover:text-white text-text-muted font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-full transition flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-xs sm:text-base"
-                                        >
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg> Anterior
-                                        </button>
-                                    )}
-                                    
-                                    <div className="text-white/50 font-bold text-xs sm:text-sm tracking-widest whitespace-nowrap opacity-75">
-                                        {currentIndex + 1} / {todosLosProblemas.length}
-                                    </div>
-                                    
-                                    {currentIndex < todosLosProblemas.length - 1 && (
-                                        <button 
-                                            onClick={nextProblem} 
-                                            className="hover:text-white text-text-muted font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-full transition flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-xs sm:text-base"
-                                        >
-                                            Siguiente <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                {/* Apple-Style Large Touch Target Bottom Dock */}
+                <div className="fixed bottom-0 inset-x-0 z-40 bg-[#09090b]/94 backdrop-blur-md border-t border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3.5 shadow-[0_-8px_24px_rgba(0,0,0,0.45)]">
+                    <div className="max-w-3xl mx-auto flex items-center justify-between gap-2 sm:gap-3 w-full">
+                        {/* 1. Anterior (Icon on mobile, icon+label on desktop) */}
+                        <button
+                            onClick={prevProblem}
+                            className="w-12 sm:w-auto h-12 sm:h-13 px-0 sm:px-6 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth flex items-center justify-center gap-2 flex-shrink-0"
+                            title={currentIndex === 0 ? "Primer problema (límite)" : "Problema anterior"}
+                        >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
+                            <span className="hidden sm:inline">Anterior</span>
+                        </button>
+
+                        {/* 2. Dynamic Problem Indicator */}
+                        <div className="flex-1 flex flex-col items-center justify-center min-w-0 px-2">
+                            <span className="text-xs sm:text-sm font-mono font-medium text-white/60 truncate">
+                                Problema <strong className="text-white font-bold">{currentIndex + 1}</strong> de {todosLosProblemas.length}
+                            </span>
                         </div>
+
+                        {/* 3. Siguiente (SOLID PURPLE, Primary Apple Button) */}
+                        <button
+                            onClick={nextProblem}
+                            className="flex-[1.2] sm:flex-initial sm:min-w-[140px] h-12 sm:h-13 px-4 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.92] transition-all duration-200 touch-smooth flex items-center justify-center gap-1.5 sm:gap-2 min-w-0"
+                            title={currentIndex === todosLosProblemas.length - 1 ? "Último problema (límite)" : "Siguiente problema"}
+                        >
+                            <span>Siguiente</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
                     </div>
                 </div>
-        
 
+            {/* Apple Sheet Confirmation Modal to Clear/Reset */}
             {clearTarget && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setClearTarget(null)}></div>
-                    <div className="glass-panel relative rounded-3xl p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out] border border-white/10">
-                        <button onClick={() => setClearTarget(null)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    <div className="absolute inset-0 bg-black/80 animate-fade-in" onClick={() => setClearTarget(null)}></div>
+                    <div className="bg-[#161618] relative rounded-[28px] p-6 sm:p-8 max-w-sm sm:max-w-md w-full shadow-[0_24px_50px_rgba(0,0,0,0.7)] border border-white/[0.1] text-center flex flex-col gap-5 z-10 animate-modal-bounce">
+                        <button onClick={() => setClearTarget(null)} className="absolute top-5 right-5 text-white/50 hover:text-white transition p-1 rounded-full hover:bg-white/[0.08]">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                         </button>
-                        <div className="flex items-center gap-3 mb-6">
-                            <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
+                        
+                        <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center mx-auto text-white/80 animate-spring-pop">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                         </div>
-                        <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
-                            {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad."}
-                            {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
-                            {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
-                            {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
-                        </p>
-                        <div className="flex gap-4">
-                            <button onClick={() => setClearTarget(null)} className="flex-1 px-5 py-3 rounded-xl font-bold text-text-main bg-surface border border-white/10 hover:bg-white/5 transition">Cancelar</button>
-                            <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-accent hover:bg-accent/90 border border-accent transition">Limpiar</button>
+
+                        <div className="space-y-1.5">
+                            <h2 className="text-xl font-bold tracking-tight text-white">¿Estás seguro?</h2>
+                            <p className="text-white/60 text-sm leading-relaxed">
+                                {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad."}
+                                {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
+                                {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
+                                {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
+                                {clearTarget === 'all' && "Esto reiniciará todo el problema actual a su estado inicial."}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center gap-3 pt-2">
+                            <button 
+                                onClick={() => setClearTarget(null)} 
+                                className="flex-1 py-3 px-4 rounded-2xl font-semibold text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-95 transition-all touch-smooth"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={executeClear} 
+                                className="flex-1 py-3 px-4 rounded-2xl font-bold text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-95 transition-all touch-smooth"
+                            >
+                                {clearTarget === 'all' ? 'Reiniciar' : 'Limpiar'}
+                            </button>
                         </div>
                     </div>
                 </div>
             )}
 
+            {/* Apple Sheet Rules Modal */}
             {showRules && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRules(false)}></div>
-                    <div className="glass-panel relative rounded-3xl p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out]">
-                        <button onClick={() => setShowRules(false)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    <div className="absolute inset-0 bg-black/80 animate-fade-in" onClick={() => setShowRules(false)}></div>
+                    <div className="bg-[#161618] relative rounded-[28px] p-6 sm:p-8 max-w-sm sm:max-w-md w-full shadow-[0_24px_50px_rgba(0,0,0,0.7)] border border-white/[0.1] text-left flex flex-col gap-5 z-10 animate-modal-bounce">
+                        <button onClick={() => setShowRules(false)} className="absolute top-5 right-5 text-white/50 hover:text-white transition p-1 rounded-full hover:bg-white/[0.08]">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                         </button>
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-12 h-12 rounded-full bg-warning-soft flex items-center justify-center text-2xl shadow-sm border border-warning-soft">💡</div>
-                            <h2 className="text-2xl font-extrabold text-text-main">Reglas</h2>
-                        </div>
-                        <p className="text-text-muted text-base mb-6 leading-relaxed font-medium">Recuerda estas 3 reglas del Álgebra de Boole para simplificar:</p>
                         
-                        <div className="space-y-4">
-                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
-                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">1. Idempotencia</h4>
-                                <p className="font-mono text-2xl text-text-main font-black">A + A = A</p>
+                        <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-xl flex-shrink-0">
+                                💡
                             </div>
-                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
-                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">2. Complemento (Suma)</h4>
-                                <p className="font-mono text-2xl text-text-main font-black">A + A' = 1</p>
-                            </div>
-                            <div className="bg-surface border border-white/5 p-5 rounded-2xl shadow-sm transition hover:border-accent-soft">
-                                <h4 className="text-sm font-extrabold text-warning uppercase tracking-widest mb-2">3. Complem. (Mult.)</h4>
-                                <p className="font-mono text-2xl text-text-main font-black">A · A' = 0</p>
+                            <div>
+                                <h2 className="text-xl font-bold tracking-tight text-white">Reglas del Álgebra</h2>
+                                <p className="text-xs font-mono text-white/50">3 Reglas Esenciales para Simplificar</p>
                             </div>
                         </div>
+                        
+                        <div className="space-y-3">
+                            <div className="bg-white/[0.03] border border-white/[0.08] p-4 rounded-2xl">
+                                <h4 className="text-xs font-bold text-[#c084fc] uppercase tracking-wider mb-1">1. Idempotencia</h4>
+                                <p className="font-mono text-lg text-white font-bold">A + A = A</p>
+                            </div>
+                            <div className="bg-white/[0.03] border border-white/[0.08] p-4 rounded-2xl">
+                                <h4 className="text-xs font-bold text-[#c084fc] uppercase tracking-wider mb-1">2. Complemento (Suma)</h4>
+                                <p className="font-mono text-lg text-white font-bold">A + A' = 1</p>
+                            </div>
+                            <div className="bg-white/[0.03] border border-white/[0.08] p-4 rounded-2xl">
+                                <h4 className="text-xs font-bold text-[#c084fc] uppercase tracking-wider mb-1">3. Complem. (Multiplicación)</h4>
+                                <p className="font-mono text-lg text-white font-bold">A &middot; A' = 0</p>
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={() => setShowRules(false)}
+                            className="w-full py-3 px-4 rounded-2xl font-bold text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-95 transition-all touch-smooth mt-1"
+                        >
+                            Entendido
+                        </button>
                     </div>
                 </div>
             )}

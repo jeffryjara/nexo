@@ -517,20 +517,26 @@ export default function BigDataLab() {
               </div>
             )}
 
-            {/* 3D Flashcard Stage with Touch Swipe & GPU Acceleration */}
+            {/* 3D Flashcard Stage with Touch Swipe */}
             <div className="w-full h-full flex justify-center [perspective:1600px]">
               <div
                 onClick={() => setIsFlipped(prev => !prev)}
                 onTouchStart={onCardTouchStart}
                 onTouchEnd={onCardTouchEnd}
-                className={`relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] [transform-style:preserve-3d] select-none gpu-layer ${cardAnimClass}`}
+                className={`relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] select-none ${cardAnimClass}`}
                 style={{
-                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                  transformStyle: 'preserve-3d',
+                  WebkitTransformStyle: 'preserve-3d'
                 }}
               >
                 {/* FRONT FACE (Pure Solid Surface, Zero Heavy Blur Lag) */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#141416] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between [backface-visibility:hidden] gpu-layer"
+                  className="absolute inset-0 w-full h-full bg-[#141416] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden'
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
@@ -564,7 +570,13 @@ export default function BigDataLab() {
 
                 {/* BACK FACE (Pure Solid Surface, Zero Heavy Blur Lag) */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#111113] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)] gpu-layer"
+                  className="absolute inset-0 w-full h-full bg-[#111113] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between"
+                  style={{
+                    transform: 'rotateY(180deg)',
+                    WebkitTransform: 'rotateY(180deg)',
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden'
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
@@ -767,37 +779,37 @@ export default function BigDataLab() {
 
       </main>
 
-      {/* 3. Apple-Style Large Touch Target Bottom Dock (Optimized GPU Composite) */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#09090b]/94 backdrop-blur-md border-t border-white/[0.08] px-4 sm:px-6 py-3 sm:py-3.5 shadow-[0_-8px_24px_rgba(0,0,0,0.45)] gpu-layer">
-        <div className="max-w-2xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
+      {/* 3. Apple-Style Large Touch Target Bottom Dock (Optimized Mobile Layout) */}
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#09090b]/94 backdrop-blur-md border-t border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3.5 shadow-[0_-8px_24px_rgba(0,0,0,0.45)]">
+        <div className="max-w-2xl mx-auto flex items-center justify-between gap-2 sm:gap-3 w-full">
           
-          {/* FLASHCARDS: 4 Large Action Buttons */}
+          {/* FLASHCARDS: 4 Touch-Optimized Action Buttons */}
           {activeTab === 'flashcards' && (
             <>
-              {/* 1. Anterior */}
+              {/* 1. Anterior (Icon on mobile, icon+label on desktop) */}
               <button
                 onClick={handlePrevCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth"
+                className="w-11 sm:w-auto h-12 sm:h-13 px-0 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth flex items-center justify-center gap-2 flex-shrink-0"
                 title={currentCardIndex === 0 ? "Primera tarjeta (límite)" : "Tarjeta anterior (←)"}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
-                <span className="hidden xs:inline">Anterior</span>
+                <span className="hidden sm:inline">Anterior</span>
               </button>
 
-              {/* 2. Aleatorio */}
+              {/* 2. Aleatorio (Icon on mobile, icon+label on desktop) */}
               <button
                 onClick={handleRandomCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth"
+                className="w-11 sm:w-auto h-12 sm:h-13 px-0 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth flex items-center justify-center gap-2 flex-shrink-0"
                 title="Tarjeta aleatoria (R)"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className={`transition-transform duration-500 ${shuffleSpin ? 'rotate-180 scale-125' : ''}`}><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
                 <span className="hidden sm:inline">Aleatorio</span>
               </button>
 
-              {/* 3. Marcar como Dominada */}
+              {/* 3. Marcar como Dominada (Flexible Pill) */}
               <button
                 onClick={toggleMastered}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm active:scale-[0.92] transition-all duration-200 border touch-smooth ${
+                className={`flex-1 sm:flex-initial h-12 sm:h-13 px-3 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm active:scale-[0.92] transition-all duration-200 border touch-smooth flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 ${
                   masteredAnim ? 'animate-spring-pop' : ''
                 } ${
                   isCurrentMastered
@@ -806,18 +818,18 @@ export default function BigDataLab() {
                 }`}
                 title="Marcar como dominada (M)"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>{isCurrentMastered ? 'Dominada' : 'Dominar'}</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" className="flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                <span className="truncate">{isCurrentMastered ? 'Dominada' : 'Dominar'}</span>
               </button>
 
-              {/* 4. Siguiente (SOLID PURPLE) */}
+              {/* 4. Siguiente (SOLID PURPLE, Primary Button) */}
               <button
                 onClick={handleNextCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-5 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.92] transition-all duration-200 touch-smooth"
+                className="flex-[1.2] sm:flex-initial h-12 sm:h-13 px-4 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.92] transition-all duration-200 touch-smooth flex items-center justify-center gap-1.5 sm:gap-2 min-w-0"
                 title={currentCardIndex === FLASHCARDS.length - 1 ? "Última tarjeta (límite)" : "Siguiente tarjeta (→)"}
               >
-                <span>Siguiente</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m9 18 6-6-6-6"/></svg>
+                <span className="truncate">Siguiente</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0"><path d="m9 18 6-6-6-6"/></svg>
               </button>
             </>
           )}
