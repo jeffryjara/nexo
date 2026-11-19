@@ -3,7 +3,6 @@ import { FLASHCARDS, QUIZ_QUESTIONS } from '../data/bigDataQuestions';
 
 export default function BigDataLab() {
   const [activeTab, setActiveTab] = useState('flashcards'); // 'flashcards' | 'quiz'
-  const [categoryFilter, setCategoryFilter] = useState('Todas');
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [masteredIds, setMasteredIds] = useState([]);
@@ -40,33 +39,25 @@ export default function BigDataLab() {
     } catch (e) {}
   }, [quizAnswers]);
 
-  // Categories
-  const categories = ['Todas', 'Integridad y Tipos', 'T-SQL y Ventana', 'Triggers y Cursores', 'Big Data y BI'];
-
-  // Filtered flashcards
-  const filteredCards = categoryFilter === 'Todas' 
-    ? FLASHCARDS 
-    : FLASHCARDS.filter(c => c.category === categoryFilter);
-
-  // Flashcard Actions
-  const currentCard = filteredCards[currentCardIndex] || filteredCards[0];
+  // Flashcards (All 30 Cards)
+  const currentCard = FLASHCARDS[currentCardIndex] || FLASHCARDS[0];
   const isCurrentMastered = currentCard ? masteredIds.includes(currentCard.id) : false;
 
   const handleNextCard = () => {
     setIsFlipped(false);
-    setCurrentCardIndex((prev) => (prev + 1) % filteredCards.length);
+    setCurrentCardIndex((prev) => (prev + 1) % FLASHCARDS.length);
   };
 
   const handlePrevCard = () => {
     setIsFlipped(false);
-    setCurrentCardIndex((prev) => (prev - 1 + filteredCards.length) % filteredCards.length);
+    setCurrentCardIndex((prev) => (prev - 1 + FLASHCARDS.length) % FLASHCARDS.length);
   };
 
   const handleRandomCard = () => {
-    if (filteredCards.length <= 1) return;
+    if (FLASHCARDS.length <= 1) return;
     let nextIdx = currentCardIndex;
     while (nextIdx === currentCardIndex) {
-      nextIdx = Math.floor(Math.random() * filteredCards.length);
+      nextIdx = Math.floor(Math.random() * FLASHCARDS.length);
     }
     setIsFlipped(false);
     setCurrentCardIndex(nextIdx);
@@ -79,12 +70,6 @@ export default function BigDataLab() {
         ? prev.filter(id => id !== currentCard.id)
         : [...prev, currentCard.id]
     );
-  };
-
-  const selectCategory = (cat) => {
-    setCategoryFilter(cat);
-    setCurrentCardIndex(0);
-    setIsFlipped(false);
   };
 
   // Keyboard Navigation
@@ -120,7 +105,7 @@ export default function BigDataLab() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeTab, filteredCards.length, currentCardIndex, showResetModal, showResultsModal, currentCard]);
+  }, [activeTab, FLASHCARDS.length, currentCardIndex, showResetModal, showResultsModal, currentCard]);
 
   // Quiz Stats
   const currentQuiz = QUIZ_QUESTIONS[quizIndex];
@@ -176,7 +161,7 @@ export default function BigDataLab() {
                 <div className="flex items-center gap-2 text-xs font-mono font-medium tracking-tight truncate">
                   {activeTab === 'flashcards' ? (
                     <span className="text-[#c084fc]">
-                      Tarjeta {currentCardIndex + 1} de {filteredCards.length}
+                      Tarjeta {currentCardIndex + 1} de {FLASHCARDS.length}
                     </span>
                   ) : (
                     <span className="text-[#c084fc]">
@@ -217,9 +202,9 @@ export default function BigDataLab() {
             <div className="flex items-center p-1 rounded-full bg-[#1c1c1e]/80 border border-white/[0.08] shadow-inner w-full sm:w-auto">
               <button
                 onClick={() => setActiveTab('flashcards')}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-300 ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 ${
                   activeTab === 'flashcards'
-                    ? 'bg-gradient-to-r from-[#9333ea] to-[#af52de] text-white shadow-[0_2px_12px_rgba(175,82,222,0.4)]'
+                    ? 'bg-[#9333ea] text-white shadow-sm'
                     : 'text-white/60 hover:text-white'
                 }`}
               >
@@ -228,9 +213,9 @@ export default function BigDataLab() {
               </button>
               <button
                 onClick={() => setActiveTab('quiz')}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-300 ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 ${
                   activeTab === 'quiz'
-                    ? 'bg-gradient-to-r from-[#9333ea] to-[#af52de] text-white shadow-[0_2px_12px_rgba(175,82,222,0.4)]'
+                    ? 'bg-[#9333ea] text-white shadow-sm'
                     : 'text-white/60 hover:text-white'
                 }`}
               >
@@ -244,44 +229,31 @@ export default function BigDataLab() {
       </header>
 
       {/* 2. Main Content Area */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6 w-full">
+      <main className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
+        activeTab === 'flashcards'
+          ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-145px)] min-h-[460px] pt-2 pb-20 sm:pb-24 flex flex-col justify-center'
+          : 'pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6'
+      }`}>
         
-        {/* ================= FLASHCARDS VIEW ================= */}
+        {/* ================= FLASHCARDS VIEW (FULL HEIGHT) ================= */}
         {activeTab === 'flashcards' && (
-          <div className="flex flex-col gap-5 sm:gap-6 w-full animate-fade-in">
+          <div className="flex flex-col justify-center w-full h-full max-h-[760px] animate-fade-in">
             
-            {/* Category Chips Bar */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar w-full">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => selectCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border flex-shrink-0 active:scale-95 ${
-                    categoryFilter === cat
-                      ? 'bg-[#af52de]/20 border-[#af52de]/50 text-white shadow-[0_0_16px_rgba(175,82,222,0.3)]'
-                      : 'bg-white/[0.04] border-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.08]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
             {/* 3D Flashcard Stage */}
-            <div className="w-full flex justify-center [perspective:1600px]">
+            <div className="w-full h-full flex justify-center [perspective:1600px]">
               <div
                 onClick={() => setIsFlipped(prev => !prev)}
-                className="relative w-full min-h-[380px] sm:min-h-[420px] rounded-[30px] cursor-pointer transition-transform duration-500 [transform-style:preserve-3d]"
+                className="relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 [transform-style:preserve-3d] select-none"
                 style={{
                   transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
                 }}
               >
                 {/* FRONT FACE */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#161618]/85 backdrop-blur-2xl rounded-[30px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden]"
+                  className="absolute inset-0 w-full h-full bg-[#161618]/90 backdrop-blur-2xl rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden]"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-3.5 py-1.5 rounded-full bg-[#af52de]/15 border border-[#af52de]/30 text-[#d8b4fe] font-mono text-xs font-semibold">
+                    <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
                       {currentCard?.category}
                     </span>
                     <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium ${
@@ -293,11 +265,11 @@ export default function BigDataLab() {
                     </span>
                   </div>
 
-                  <div className="my-auto py-6 text-center flex flex-col items-center justify-center gap-3">
+                  <div className="my-auto py-6 text-center flex flex-col items-center justify-center gap-3 sm:gap-4 px-2">
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
                       {currentCard?.term}
                     </h2>
-                    <p className="text-white/60 text-sm sm:text-base max-w-lg leading-relaxed">
+                    <p className="text-white/60 text-sm sm:text-base md:text-lg max-w-lg leading-relaxed">
                       {currentCard?.subtitle || currentCard?.definition_short}
                     </p>
                   </div>
@@ -310,10 +282,10 @@ export default function BigDataLab() {
 
                 {/* BACK FACE */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#121214]/90 backdrop-blur-2xl rounded-[30px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]"
+                  className="absolute inset-0 w-full h-full bg-[#121214]/95 backdrop-blur-2xl rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-3.5 py-1.5 rounded-full bg-[#af52de]/20 border border-[#af52de]/40 text-[#d8b4fe] font-mono text-xs font-semibold">
+                    <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
                       {currentCard?.category}
                     </span>
                     <span className="text-xs font-mono text-[#d8b4fe]">
@@ -321,7 +293,7 @@ export default function BigDataLab() {
                     </span>
                   </div>
 
-                  <div className="my-auto py-4 flex flex-col gap-3 text-left max-h-[290px] overflow-y-auto pr-1">
+                  <div className="my-auto py-4 flex flex-col gap-3 text-left overflow-y-auto max-h-[calc(100%-90px)] pr-1">
                     <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
                       {currentCard?.term}
                     </h3>
@@ -346,7 +318,7 @@ export default function BigDataLab() {
             </div>
 
             {/* Desktop Keyboard Hints */}
-            <p className="hidden md:block text-center text-white/35 text-xs font-medium">
+            <p className="hidden md:block text-center text-white/35 text-xs font-medium mt-3">
               Atajos: <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono">Espacio</kbd> Voltear &middot; <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono">&larr;</kbd> <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono">&rarr;</kbd> Navegar &middot; <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono">M</kbd> Dominar &middot; <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono">R</kbd> Aleatoria
             </p>
 
@@ -467,7 +439,7 @@ export default function BigDataLab() {
 
                       let chipStyle = "bg-white/[0.04] text-white/40 border-white/[0.05]";
                       if (active) {
-                        chipStyle = "bg-gradient-to-r from-[#9333ea] to-[#af52de] text-white font-bold border-transparent shadow-[0_0_12px_rgba(175,82,222,0.4)]";
+                        chipStyle = "bg-[#9333ea] text-white font-bold border-transparent shadow-sm";
                       } else if (answered) {
                         chipStyle = correct 
                           ? "bg-[#30D158]/20 text-[#30D158] border-[#30D158]/30 font-semibold" 
@@ -497,8 +469,8 @@ export default function BigDataLab() {
       </main>
 
       {/* 3. Apple-Style Large Touch Target Bottom Dock */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#000000]/80 backdrop-blur-2xl border-t border-white/[0.08] px-4 sm:px-6 py-3 sm:py-4 shadow-[0_-12px_40px_rgba(0,0,0,0.65)]">
-        <div className="max-w-2xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#000000]/80 backdrop-blur-2xl border-t border-white/[0.08] px-4 sm:px-6 py-3 sm:py-3.5 shadow-[0_-12px_40px_rgba(0,0,0,0.65)]">
+        <div className="max-w-2xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
           
           {/* FLASHCARDS: 4 Large Action Buttons */}
           {activeTab === 'flashcards' && (
@@ -506,7 +478,7 @@ export default function BigDataLab() {
               {/* 1. Anterior */}
               <button
                 onClick={handlePrevCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-[16px] font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.97] transition-all"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.97] transition-all"
                 title="Tarjeta anterior (←)"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
@@ -516,7 +488,7 @@ export default function BigDataLab() {
               {/* 2. Aleatorio */}
               <button
                 onClick={handleRandomCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-[16px] font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.97] transition-all"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.97] transition-all"
                 title="Tarjeta aleatoria (R)"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
@@ -526,9 +498,9 @@ export default function BigDataLab() {
               {/* 3. Marcar como Dominada */}
               <button
                 onClick={toggleMastered}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-[16px] font-semibold text-xs sm:text-sm active:scale-[0.97] transition-all border ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm active:scale-[0.97] transition-all border ${
                   isCurrentMastered
-                    ? 'bg-[#30D158]/20 text-[#30D158] border-[#30D158]/40 shadow-[0_0_16px_rgba(48,209,88,0.25)]'
+                    ? 'bg-[#30D158]/20 text-[#30D158] border-[#30D158]/40 shadow-[0_0_16px_rgba(48,209,88,0.2)]'
                     : 'bg-white/[0.04] border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.08]'
                 }`}
                 title="Marcar como dominada (M)"
@@ -537,10 +509,10 @@ export default function BigDataLab() {
                 <span>{isCurrentMastered ? 'Dominada' : 'Dominar'}</span>
               </button>
 
-              {/* 4. Siguiente */}
+              {/* 4. Siguiente (SOLID PURPLE) */}
               <button
                 onClick={handleNextCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-5 sm:px-7 rounded-[16px] font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-[#9333ea] to-[#af52de] shadow-[0_4px_20px_rgba(175,82,222,0.35)] hover:shadow-[0_4px_28px_rgba(175,82,222,0.5)] active:scale-[0.97] transition-all"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-5 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.97] transition-all"
                 title="Siguiente tarjeta (→)"
               >
                 <span>Siguiente</span>
@@ -549,16 +521,17 @@ export default function BigDataLab() {
             </>
           )}
 
-          {/* QUIZ: 2 Prominent Apple Buttons */}
+          {/* QUIZ: 2 Prominent Apple Buttons (SOLID COLOR, BALANCED PROPORTIONS) */}
           {activeTab === 'quiz' && (
-            <>
+            <div className="w-full flex items-center gap-3">
               {/* 1. Anterior */}
               <button
                 disabled={quizIndex === 0}
                 onClick={() => setQuizIndex(prev => prev - 1)}
-                className="h-13 sm:h-14 px-5 sm:px-7 rounded-[18px] font-semibold text-sm sm:text-base text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.08] disabled:opacity-25 disabled:cursor-not-allowed active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                className="flex-1 sm:flex-initial sm:min-w-[140px] h-12 sm:h-13 px-4 sm:px-6 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] disabled:opacity-30 disabled:cursor-not-allowed active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                title="Pregunta anterior"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
                 <span>Anterior</span>
               </button>
 
@@ -567,22 +540,24 @@ export default function BigDataLab() {
                 <button
                   disabled={!isCurrentAnswered}
                   onClick={() => setQuizIndex(prev => prev + 1)}
-                  className="flex-1 h-13 sm:h-14 px-6 sm:px-8 rounded-[18px] font-semibold text-sm sm:text-base text-white bg-gradient-to-r from-[#9333ea] to-[#af52de] disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(175,82,222,0.35)] hover:shadow-[0_4px_30px_rgba(175,82,222,0.5)] active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                  className="flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-semibold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] disabled:opacity-35 disabled:cursor-not-allowed shadow-sm active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                  title="Siguiente pregunta"
                 >
                   <span>Siguiente pregunta</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m9 18 6-6-6-6"/></svg>
                 </button>
               ) : (
                 <button
                   disabled={!isCurrentAnswered}
                   onClick={() => setShowResultsModal(true)}
-                  className="flex-1 h-13 sm:h-14 px-6 sm:px-8 rounded-[18px] font-bold text-sm sm:text-base text-black bg-[#30D158] hover:bg-[#34C759] disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_4px_24px_rgba(48,209,88,0.35)] hover:shadow-[0_4px_30px_rgba(48,209,88,0.5)] active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                  className="flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-bold text-xs sm:text-sm text-black bg-[#30D158] hover:bg-[#34C759] disabled:opacity-35 disabled:cursor-not-allowed shadow-sm active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+                  title="Ver resultados"
                 >
                   <span>Ver resultados</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 </button>
               )}
-            </>
+            </div>
           )}
 
         </div>
@@ -607,13 +582,13 @@ export default function BigDataLab() {
             <div className="flex flex-col gap-2.5 mt-1">
               <button
                 onClick={handleResetQuiz}
-                className="w-full h-12 rounded-[16px] font-semibold text-sm text-white bg-gradient-to-r from-[#9333ea] to-[#af52de] shadow-[0_4px_20px_rgba(175,82,222,0.35)] active:scale-[0.98] transition-all"
+                className="w-full h-12 rounded-2xl font-semibold text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.98] transition-all"
               >
                 Sí, reiniciar
               </button>
               <button
                 onClick={() => setShowResetModal(false)}
-                className="w-full h-12 rounded-[16px] font-semibold text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] active:scale-[0.98] transition-all"
+                className="w-full h-12 rounded-2xl font-semibold text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] active:scale-[0.98] transition-all"
               >
                 Cancelar
               </button>
@@ -644,12 +619,6 @@ export default function BigDataLab() {
             {/* Apple Activity / Fitness Style Circular Gauge */}
             <div className="relative flex items-center justify-center mt-1">
               <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
-                <defs>
-                  <linearGradient id="appleRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#bf5af2" />
-                    <stop offset="100%" stopColor="#9333ea" />
-                  </linearGradient>
-                </defs>
                 {/* Background Track */}
                 <circle
                   cx="60"
@@ -659,13 +628,13 @@ export default function BigDataLab() {
                   stroke="rgba(255, 255, 255, 0.08)"
                   strokeWidth="8"
                 />
-                {/* Active Progress Ring */}
+                {/* Active Progress Ring (SOLID COLOR) */}
                 <circle
                   cx="60"
                   cy="60"
                   r="48"
                   fill="none"
-                  stroke="url(#appleRingGrad)"
+                  stroke="#a855f7"
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeDasharray="301.59"
@@ -697,7 +666,7 @@ export default function BigDataLab() {
                   ? "Dominas con solidez el diccionario técnico de SQL Server, triggers y arquitectura ETL / BI."
                   : percentage >= 65 
                     ? "Tienes una base firme; repasa en Flashcards los temas fallados para responder con total seguridad en la sustentación."
-                    : "Dedica una ronda completa a las Flashcards por categoría y vuelve a intentar el cuestionario para consolidar la sintaxis T-SQL."}
+                    : "Dedica una ronda completa a las Flashcards y vuelve a intentar el cuestionario para consolidar la sintaxis T-SQL."}
               </p>
             </div>
 
@@ -741,7 +710,7 @@ export default function BigDataLab() {
                   setShowResultsModal(false);
                   setShowResetModal(true);
                 }}
-                className="w-full h-13 sm:h-14 rounded-[18px] font-semibold text-[15px] sm:text-base text-white bg-gradient-to-r from-[#9333ea] to-[#af52de] shadow-[0_4px_24px_rgba(175,82,222,0.35)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
                 Reiniciar cuestionario
               </button>
@@ -750,7 +719,7 @@ export default function BigDataLab() {
                   setShowResultsModal(false);
                   setActiveTab('flashcards');
                 }}
-                className="w-full h-13 sm:h-14 rounded-[18px] font-semibold text-[15px] sm:text-base text-white/90 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.08] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white/90 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.08] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
                 Repasar en Flashcards
               </button>
