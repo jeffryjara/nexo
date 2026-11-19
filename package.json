@@ -1,7 +1,30 @@
 {
   "name": "nexo",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Plataforma web interactiva para aprendizaje universitario de Ciencias de la Computación e Ingeniería de Sistemas.",
+  "author": "Jeffry Jara & Juan Huertas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeffryjara/nexo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeffryjara/nexo/issues"
+  },
+  "homepage": "https://github.com/jeffryjara/nexo#readme",
+  "keywords": [
+    "astro",
+    "react",
+    "tailwindcss",
+    "computer-architecture",
+    "big-data",
+    "sql-server",
+    "t-sql",
+    "boolean-algebra",
+    "karnaugh-map",
+    "education"
+  ],
   "engines": {
     "node": ">=22.12.0"
   },
