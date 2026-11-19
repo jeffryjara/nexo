@@ -12,6 +12,7 @@ export default function BigDataLab() {
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showResultsModal, setShowResultsModal] = useState(false);
 
   // Load from localStorage
   useEffect(() => {
@@ -91,6 +92,10 @@ export default function BigDataLab() {
     const handleKeyDown = (e) => {
       if (showResetModal) {
         if (e.key === 'Escape') setShowResetModal(false);
+        return;
+      }
+      if (showResultsModal) {
+        if (e.key === 'Escape') setShowResultsModal(false);
         return;
       }
       if (activeTab === 'flashcards') {
@@ -179,14 +184,26 @@ export default function BigDataLab() {
                 </div>
               </div>
             </div>
+
+            {/* EN MÓVIL: Botón Reiniciar encima de las dos secciones (en la fila superior) */}
+            {activeTab === 'quiz' && (
+              <button
+                onClick={() => setShowResetModal(true)}
+                className="sm:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 active:scale-95 transition-all shadow-sm flex-shrink-0"
+                title="Reiniciar cuestionario"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>Reiniciar</span>
+              </button>
+            )}
           </div>
 
-          {/* Right: Reiniciar Button + Switcher Tabs (Flashcards | Quiz) */}
+          {/* Right: Reiniciar Button (desktop) + Switcher Tabs (Flashcards | Quiz) */}
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
             {activeTab === 'quiz' && (
               <button
                 onClick={() => setShowResetModal(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 hover:bg-white/5 active:scale-95 transition-all shadow-sm flex-shrink-0"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm text-text-muted hover:text-white bg-surface border border-white/10 hover:border-white/20 hover:bg-white/5 active:scale-95 transition-all shadow-sm flex-shrink-0"
                 title="Reiniciar cuestionario"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -603,10 +620,7 @@ export default function BigDataLab() {
               ) : (
                 <button
                   disabled={!isCurrentAnswered}
-                  onClick={() => {
-                    // Si ya respondió la última pregunta, scroll al resumen o toggle
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                  }}
+                  onClick={() => setShowResultsModal(true)}
                   className="flex-[2] sm:flex-initial inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-emerald-600 to-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(16,185,129,0.35)] active:scale-95 transition"
                 >
                   <span>Ver resultados</span>
@@ -623,7 +637,7 @@ export default function BigDataLab() {
       {showResetModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={() => setShowResetModal(false)}></div>
-          <div className="glass-panel relative rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out] border border-white/10 text-center flex flex-col gap-4">
+          <div className="glass-panel relative rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out] border border-white/10 text-center flex flex-col gap-4 z-10">
             <h2 className="text-xl sm:text-2xl font-extrabold text-white">¿Reiniciar el cuestionario?</h2>
             <p className="text-text-muted text-sm sm:text-base leading-relaxed">
               Se borrarán todas tus respuestas registradas y tu puntaje volverá a cero para comenzar un nuevo intento.
@@ -642,6 +656,117 @@ export default function BigDataLab() {
                 Sí, reiniciar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Results Summary Modal (Modal con Porcentaje, Acertados y Fallados) */}
+      {showResultsModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-md animate-fade-in" 
+            onClick={() => setShowResultsModal(false)}
+          ></div>
+          
+          <div className="glass-panel relative rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-white/10 text-center flex flex-col items-center gap-5 bg-gradient-to-b from-[#181024] to-[#0e0e12] animate-[fadeIn_0.2s_ease-out] z-10">
+            
+            {/* Close Button */}
+            <button
+              onClick={() => setShowResultsModal(false)}
+              className="absolute top-4 right-4 text-text-muted hover:text-white p-2 rounded-full hover:bg-white/5 transition"
+              title="Cerrar modal"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            {/* Badge */}
+            <span className="px-3.5 py-1 rounded-full bg-accent/15 border border-accent/30 text-[#c084fc] font-mono text-xs font-semibold tracking-wider uppercase">
+              Resultados del Cuestionario
+            </span>
+
+            {/* Percentage Gauge Circle */}
+            <div className="relative w-24 h-24 rounded-full bg-accent/15 border-2 border-accent flex flex-col items-center justify-center shadow-[0_0_35px_rgba(168,85,247,0.45)]">
+              <span className="text-3xl font-black text-white">
+                {Math.round((correctCount / QUIZ_QUESTIONS.length) * 100)}%
+              </span>
+              <span className="text-[10px] font-mono uppercase text-[#d8b4fe] font-semibold tracking-wider">
+                Precisión
+              </span>
+            </div>
+
+            {/* Diagnosis Message */}
+            <div className="space-y-1.5 text-center">
+              <h3 className="text-xl sm:text-2xl font-black text-white">
+                {correctCount >= 27 
+                  ? "¡Excelente preparación oral!"
+                  : correctCount >= 20 
+                    ? "Buen nivel general"
+                    : "Recomendado reforzar conceptos"}
+              </h3>
+              <p className="text-text-muted text-xs sm:text-sm leading-relaxed max-w-sm">
+                {correctCount >= 27 
+                  ? "Dominas con solidez el diccionario técnico de SQL Server, triggers y arquitectura ETL / BI."
+                  : correctCount >= 20 
+                    ? "Tienes una base firme; repasa en Flashcards los temas fallados para responder con total seguridad."
+                    : "Dedica una ronda completa a las Flashcards por categoría y vuelve a intentar el cuestionario."}
+              </p>
+            </div>
+
+            {/* Detailed Tiles: Acertados, Fallados, Total */}
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full">
+              {/* Acertados */}
+              <div className="glass-panel p-3 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 flex flex-col items-center">
+                <span className="text-[10px] sm:text-xs font-mono text-emerald-400 uppercase font-bold tracking-wider">
+                  Acertados
+                </span>
+                <span className="text-2xl font-black text-emerald-400 mt-0.5">
+                  {correctCount}
+                </span>
+              </div>
+
+              {/* Fallados */}
+              <div className="glass-panel p-3 rounded-2xl border border-rose-500/25 bg-rose-500/10 flex flex-col items-center">
+                <span className="text-[10px] sm:text-xs font-mono text-rose-400 uppercase font-bold tracking-wider">
+                  Fallados
+                </span>
+                <span className="text-2xl font-black text-rose-400 mt-0.5">
+                  {QUIZ_QUESTIONS.length - correctCount}
+                </span>
+              </div>
+
+              {/* Total */}
+              <div className="glass-panel p-3 rounded-2xl border border-white/10 bg-white/5 flex flex-col items-center">
+                <span className="text-[10px] sm:text-xs font-mono text-text-muted uppercase font-bold tracking-wider">
+                  Total
+                </span>
+                <span className="text-2xl font-black text-text-main mt-0.5">
+                  {QUIZ_QUESTIONS.length}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons in Modal */}
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full mt-1">
+              <button
+                onClick={() => {
+                  setShowResultsModal(false);
+                  setShowResetModal(true);
+                }}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-text-main bg-surface border border-white/10 hover:border-white/20 active:scale-95 transition"
+              >
+                Reiniciar intento
+              </button>
+              <button
+                onClick={() => {
+                  setShowResultsModal(false);
+                  setActiveTab('flashcards');
+                }}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-[#9333ea] to-[#a855f7] shadow-[0_0_20px_rgba(168,85,247,0.35)] active:scale-95 transition"
+              >
+                Repasar Flashcards
+              </button>
+            </div>
+
           </div>
         </div>
       )}
