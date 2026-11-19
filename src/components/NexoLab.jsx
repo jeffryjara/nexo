@@ -376,7 +376,7 @@ setUserGrid(initialGrid);
 
                 <div className="min-h-screen relative max-w-full">
                     {/* Sticky Header with Back Button, Title, Dynamic Counter & Reglas Button */}
-                    <header className="sticky top-0 z-40 w-full bg-[#0a0a0c]/90 backdrop-blur-2xl border-b border-white/10 px-3 sm:px-6 py-2.5 sm:py-3 shadow-lg">
+                    <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)] gpu-layer">
                         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
                             
                             {/* Left: Back + Title + Dynamic Counter */}

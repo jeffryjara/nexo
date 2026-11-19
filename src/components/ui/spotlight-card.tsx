@@ -42,24 +42,42 @@ const GlowCard: React.FC<GlowCardProps> = ({
   
 
   useEffect(() => {
-    const syncPointer = (e: PointerEvent) => {
-      
-      if (cardRef.current) {
+    // Skip global pointer listener on touch devices to ensure ultra-smooth 60fps scrolling
+    if (typeof window !== 'undefined' && window.matchMedia && !window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
+
+    let rafId: number | null = null;
+    let pendingEvent: PointerEvent | null = null;
+
+    const updateProperties = () => {
+      if (pendingEvent && cardRef.current) {
         const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = pendingEvent.clientX - rect.left;
+        const y = pendingEvent.clientY - rect.top;
         cardRef.current.style.setProperty('--x', x.toFixed(2));
-        cardRef.current.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(2));
+        cardRef.current.style.setProperty('--xp', (pendingEvent.clientX / window.innerWidth).toFixed(2));
         cardRef.current.style.setProperty('--y', y.toFixed(2));
-        cardRef.current.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(2));
+        cardRef.current.style.setProperty('--yp', (pendingEvent.clientY / window.innerHeight).toFixed(2));
         cardRef.current.style.setProperty('--bg-spot-opacity', '0.15');
         cardRef.current.style.setProperty('--border-spot-opacity', '1');
         cardRef.current.style.setProperty('--border-light-opacity', '1');
       }
+      rafId = null;
     };
 
-    document.addEventListener('pointermove', syncPointer);
-    return () => document.removeEventListener('pointermove', syncPointer);
+    const syncPointer = (e: PointerEvent) => {
+      pendingEvent = e;
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateProperties);
+      }
+    };
+
+    document.addEventListener('pointermove', syncPointer, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', syncPointer);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const { base, spread } = glowColorMap[glowColor];

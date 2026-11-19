@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FLASHCARDS, QUIZ_QUESTIONS } from '../data/bigDataQuestions';
 
 export default function BigDataLab() {
@@ -15,6 +15,17 @@ export default function BigDataLab() {
   const [shuffleSpin, setShuffleSpin] = useState(false);
   const [boundaryHit, setBoundaryHit] = useState(null); // 'start' | 'end' | null
   
+  // Transition locks to prevent animation collision
+  const isCardTransitioningRef = useRef(false);
+  const isQuizTransitioningRef = useRef(false);
+  const touchCardStart = useRef({ x: 0, y: 0, time: 0 });
+
+  // Apple Rubber-Band Overscroll Physics
+  const [overscrollY, setOverscrollY] = useState(0);
+  const [isOverscrollReleasing, setIsOverscrollReleasing] = useState(false);
+  const touchStartYRef = useRef(0);
+  const isTouchingRef = useRef(false);
+
   // Quiz State
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
@@ -47,12 +58,101 @@ export default function BigDataLab() {
     } catch (e) {}
   }, [quizAnswers]);
 
+  // Apple Rubber-Band Overscroll (Touch & Wheel Physics)
+  useEffect(() => {
+    const handleTouchStart = (e) => {
+      if (e.touches.length !== 1) return;
+      touchStartYRef.current = e.touches[0].clientY;
+      isTouchingRef.current = true;
+      setIsOverscrollReleasing(false);
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isTouchingRef.current || e.touches.length !== 1) return;
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - touchStartYRef.current;
+      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const isAtTop = scrollY <= 1;
+      const isAtBottom = scrollY + clientHeight >= scrollHeight - 4;
+
+      if (isAtTop && deltaY > 0) {
+        // Pulling down past top boundary (Apple Rubber-Band resistance)
+        const pull = Math.min(80, Math.pow(deltaY, 0.7) * 2.2);
+        setOverscrollY(pull);
+      } else if (isAtBottom && deltaY < 0) {
+        // Pulling up past bottom boundary (Apple Rubber-Band resistance)
+        const pull = -Math.min(80, Math.pow(Math.abs(deltaY), 0.7) * 2.2);
+        setOverscrollY(pull);
+      } else if (overscrollY !== 0) {
+        setOverscrollY(0);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (!isTouchingRef.current) return;
+      isTouchingRef.current = false;
+      if (overscrollY !== 0) {
+        setIsOverscrollReleasing(true);
+        setOverscrollY(0);
+        setTimeout(() => setIsOverscrollReleasing(false), 450);
+      }
+    };
+
+    // Wheel overscroll for trackpad / mouse
+    let wheelTimeout = null;
+    const handleWheel = (e) => {
+      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const isAtTop = scrollY <= 1;
+      const isAtBottom = scrollY + clientHeight >= scrollHeight - 4;
+
+      if (isAtTop && e.deltaY < -4) {
+        setOverscrollY(20);
+        setIsOverscrollReleasing(true);
+        if (wheelTimeout) clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+          setOverscrollY(0);
+          setTimeout(() => setIsOverscrollReleasing(false), 450);
+        }, 140);
+      } else if (isAtBottom && e.deltaY > 4) {
+        setOverscrollY(-20);
+        setIsOverscrollReleasing(true);
+        if (wheelTimeout) clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+          setOverscrollY(0);
+          setTimeout(() => setIsOverscrollReleasing(false), 450);
+        }, 140);
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchEnd);
+      window.removeEventListener('wheel', handleWheel);
+      if (wheelTimeout) clearTimeout(wheelTimeout);
+    };
+  }, [overscrollY]);
+
   // Flashcards (All 30 Cards)
   const currentCard = FLASHCARDS[currentCardIndex] || FLASHCARDS[0];
   const isCurrentMastered = currentCard ? masteredIds.includes(currentCard.id) : false;
 
+  // Next Card with Exit & Enter Animations
   const handleNextCard = () => {
+    if (isCardTransitioningRef.current) return;
     setIsFlipped(false);
+    
     if (currentCardIndex === FLASHCARDS.length - 1) {
       // Boundary limit reached!
       setCardAnimClass('animate-boundary-right');
@@ -60,16 +160,28 @@ export default function BigDataLab() {
       setTimeout(() => {
         setCardAnimClass('');
         setBoundaryHit(null);
-      }, 500);
-    } else {
-      setCardAnimClass('animate-slide-right');
-      setTimeout(() => setCardAnimClass(''), 350);
-      setCurrentCardIndex((prev) => prev + 1);
+      }, 450);
+      return;
     }
+
+    isCardTransitioningRef.current = true;
+    setCardAnimClass('animate-card-exit-left');
+
+    setTimeout(() => {
+      setCurrentCardIndex((prev) => prev + 1);
+      setCardAnimClass('animate-card-enter-right');
+      setTimeout(() => {
+        setCardAnimClass('');
+        isCardTransitioningRef.current = false;
+      }, 280);
+    }, 150);
   };
 
+  // Prev Card with Exit & Enter Animations
   const handlePrevCard = () => {
+    if (isCardTransitioningRef.current) return;
     setIsFlipped(false);
+    
     if (currentCardIndex === 0) {
       // Boundary limit reached!
       setCardAnimClass('animate-boundary-left');
@@ -77,28 +189,44 @@ export default function BigDataLab() {
       setTimeout(() => {
         setCardAnimClass('');
         setBoundaryHit(null);
-      }, 500);
-    } else {
-      setCardAnimClass('animate-slide-left');
-      setTimeout(() => setCardAnimClass(''), 350);
-      setCurrentCardIndex((prev) => prev - 1);
+      }, 450);
+      return;
     }
+
+    isCardTransitioningRef.current = true;
+    setCardAnimClass('animate-card-exit-right');
+
+    setTimeout(() => {
+      setCurrentCardIndex((prev) => prev - 1);
+      setCardAnimClass('animate-card-enter-left');
+      setTimeout(() => {
+        setCardAnimClass('');
+        isCardTransitioningRef.current = false;
+      }, 280);
+    }, 150);
   };
 
+  // Random Card with Spring Pop
   const handleRandomCard = () => {
-    if (FLASHCARDS.length <= 1) return;
+    if (isCardTransitioningRef.current || FLASHCARDS.length <= 1) return;
     let nextIdx = currentCardIndex;
     while (nextIdx === currentCardIndex) {
       nextIdx = Math.floor(Math.random() * FLASHCARDS.length);
     }
+    isCardTransitioningRef.current = true;
     setIsFlipped(false);
     setShuffleSpin(true);
-    setCardAnimClass('animate-spring-pop');
+    setCardAnimClass('animate-card-exit-fade');
+
     setTimeout(() => {
+      setCurrentCardIndex(nextIdx);
+      setCardAnimClass('animate-card-enter-pop');
       setShuffleSpin(false);
-      setCardAnimClass('');
-    }, 450);
-    setCurrentCardIndex(nextIdx);
+      setTimeout(() => {
+        setCardAnimClass('');
+        isCardTransitioningRef.current = false;
+      }, 280);
+    }, 130);
   };
 
   const toggleMastered = () => {
@@ -110,6 +238,33 @@ export default function BigDataLab() {
         ? prev.filter(id => id !== currentCard.id)
         : [...prev, currentCard.id]
     );
+  };
+
+  // Swipe Gestures for Mobile Flashcards
+  const onCardTouchStart = (e) => {
+    if (e.touches.length !== 1) return;
+    touchCardStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      time: Date.now()
+    };
+  };
+
+  const onCardTouchEnd = (e) => {
+    if (!touchCardStart.current.time) return;
+    const deltaX = e.changedTouches[0].clientX - touchCardStart.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchCardStart.current.y;
+    const deltaTime = Date.now() - touchCardStart.current.time;
+    touchCardStart.current.time = 0;
+
+    // Detect horizontal swipe (>45px, more horizontal than vertical, under 400ms)
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4 && deltaTime < 400) {
+      if (deltaX < 0) {
+        handleNextCard();
+      } else {
+        handlePrevCard();
+      }
+    }
   };
 
   // Quiz Stats & Computed Values
@@ -126,17 +281,26 @@ export default function BigDataLab() {
   const percentage = Math.round((correctCount / QUIZ_QUESTIONS.length) * 100);
 
   const handlePrevQuiz = () => {
+    if (isQuizTransitioningRef.current) return;
     if (quizIndex === 0) {
       setQuizAnimClass('animate-boundary-left');
       setTimeout(() => setQuizAnimClass(''), 450);
       return;
     }
-    setQuizAnimClass('animate-slide-left');
-    setTimeout(() => setQuizAnimClass(''), 350);
-    setQuizIndex((prev) => prev - 1);
+    isQuizTransitioningRef.current = true;
+    setQuizAnimClass('animate-card-exit-right');
+    setTimeout(() => {
+      setQuizIndex((prev) => prev - 1);
+      setQuizAnimClass('animate-card-enter-left');
+      setTimeout(() => {
+        setQuizAnimClass('');
+        isQuizTransitioningRef.current = false;
+      }, 280);
+    }, 150);
   };
 
   const handleNextQuiz = () => {
+    if (isQuizTransitioningRef.current) return;
     if (!isCurrentAnswered) {
       // Tactile boundary limit: requires selecting an option first!
       setUnansweredWarn(true);
@@ -144,12 +308,34 @@ export default function BigDataLab() {
       return;
     }
     if (!isLastQuizQuestion) {
-      setQuizAnimClass('animate-slide-right');
-      setTimeout(() => setQuizAnimClass(''), 350);
-      setQuizIndex((prev) => prev + 1);
+      isQuizTransitioningRef.current = true;
+      setQuizAnimClass('animate-card-exit-left');
+      setTimeout(() => {
+        setQuizIndex((prev) => prev + 1);
+        setQuizAnimClass('animate-card-enter-right');
+        setTimeout(() => {
+          setQuizAnimClass('');
+          isQuizTransitioningRef.current = false;
+        }, 280);
+      }, 150);
     } else {
       setShowResultsModal(true);
     }
+  };
+
+  const handleJumpToQuiz = (targetIdx) => {
+    if (isQuizTransitioningRef.current || targetIdx === quizIndex) return;
+    isQuizTransitioningRef.current = true;
+    const isForward = targetIdx > quizIndex;
+    setQuizAnimClass(isForward ? 'animate-card-exit-left' : 'animate-card-exit-right');
+    setTimeout(() => {
+      setQuizIndex(targetIdx);
+      setQuizAnimClass(isForward ? 'animate-card-enter-right' : 'animate-card-enter-left');
+      setTimeout(() => {
+        setQuizAnimClass('');
+        isQuizTransitioningRef.current = false;
+      }, 280);
+    }, 140);
   };
 
   const handleSelectQuizOption = (optIdx) => {
@@ -214,10 +400,10 @@ export default function BigDataLab() {
   }, [activeTab, FLASHCARDS.length, currentCardIndex, quizIndex, isCurrentAnswered, showResetModal, showResultsModal, currentCard]);
 
   return (
-    <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30">
+    <div className="min-h-screen relative max-w-full font-sans antialiased text-white selection:bg-[#af52de]/30 touch-smooth">
       
-      {/* 1. Apple-Inspired Frosted Glass Sticky Header */}
-      <header className="sticky top-0 z-40 w-full bg-[#000000]/75 backdrop-blur-2xl border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      {/* 1. Apple-Inspired Frosted Glass Sticky Header (Optimized for Mobile GPU) */}
+      <header className="sticky top-0 z-40 w-full bg-[#09090b]/94 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.35)] gpu-layer">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
           
           {/* Top / Left: Back + Title + Dynamic Subtitle */}
@@ -225,7 +411,7 @@ export default function BigDataLab() {
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <a 
                 href="/" 
-                className="text-white/60 hover:text-white transition-colors p-2 rounded-full hover:bg-white/[0.08] active:scale-95 flex-shrink-0"
+                className="text-white/60 hover:text-white transition-colors p-2 rounded-full hover:bg-white/[0.08] active:scale-95 flex-shrink-0 touch-smooth"
                 title="Volver a Mis Cursos"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -254,7 +440,7 @@ export default function BigDataLab() {
             {activeTab === 'quiz' && (
               <button
                 onClick={() => setShowResetModal(true)}
-                className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-semibold text-xs text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0"
+                className="sm:hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-semibold text-xs text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0 touch-smooth"
                 title="Reiniciar cuestionario"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -268,7 +454,7 @@ export default function BigDataLab() {
             {activeTab === 'quiz' && (
               <button
                 onClick={() => setShowResetModal(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0"
+                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] active:scale-95 transition-all shadow-sm flex-shrink-0 touch-smooth"
                 title="Reiniciar cuestionario"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -277,10 +463,10 @@ export default function BigDataLab() {
             )}
 
             {/* Apple Segmented Control */}
-            <div className="flex items-center p-1 rounded-full bg-[#1c1c1e]/80 border border-white/[0.08] shadow-inner w-full sm:w-auto">
+            <div className="flex items-center p-1 rounded-full bg-[#1c1c1e]/90 border border-white/[0.08] shadow-inner w-full sm:w-auto">
               <button
                 onClick={() => setActiveTab('flashcards')}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 touch-smooth ${
                   activeTab === 'flashcards'
                     ? 'bg-[#9333ea] text-white shadow-sm'
                     : 'text-white/60 hover:text-white'
@@ -291,7 +477,7 @@ export default function BigDataLab() {
               </button>
               <button
                 onClick={() => setActiveTab('quiz')}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 touch-smooth ${
                   activeTab === 'quiz'
                     ? 'bg-[#9333ea] text-white shadow-sm'
                     : 'text-white/60 hover:text-white'
@@ -306,36 +492,45 @@ export default function BigDataLab() {
         </div>
       </header>
 
-      {/* 2. Main Content Area */}
-      <main className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
-        activeTab === 'flashcards'
-          ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-145px)] min-h-[460px] pt-2 pb-20 sm:pb-24 flex flex-col justify-center'
-          : 'pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6'
-      }`}>
+      {/* 2. Main Content Area with Apple Rubber-Band Overscroll Physics */}
+      <main 
+        className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
+          activeTab === 'flashcards'
+            ? 'h-[calc(100dvh-130px)] sm:h-[calc(100dvh-145px)] min-h-[460px] pt-2 pb-20 sm:pb-24 flex flex-col justify-center'
+            : 'pt-5 sm:pt-8 pb-32 sm:pb-36 flex flex-col gap-6'
+        }`}
+        style={{
+          transform: `translate3d(0, ${overscrollY}px, 0)`,
+          transition: isOverscrollReleasing ? 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)' : 'none',
+          willChange: overscrollY !== 0 || isOverscrollReleasing ? 'transform' : 'auto'
+        }}
+      >
         
-        {/* ================= FLASHCARDS VIEW (FULL HEIGHT + SPRING MOTION) ================= */}
+        {/* ================= FLASHCARDS VIEW (FULL HEIGHT + SPRING MOTION & EXIT/ENTER) ================= */}
         {activeTab === 'flashcards' && (
           <div className="relative flex flex-col justify-center w-full h-full max-h-[760px] animate-fade-in">
             
             {/* Boundary Limit Floating Indicator */}
             {boundaryHit && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/90 border border-white/20 text-[#d8b4fe] text-xs font-mono font-semibold shadow-2xl backdrop-blur-xl animate-spring-pop pointer-events-none">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/95 border border-white/20 text-[#d8b4fe] text-xs font-mono font-semibold shadow-2xl animate-spring-pop pointer-events-none gpu-layer">
                 {boundaryHit === 'start' ? '← Primera tarjeta del curso' : 'Última tarjeta del curso →'}
               </div>
             )}
 
-            {/* 3D Flashcard Stage */}
+            {/* 3D Flashcard Stage with Touch Swipe & GPU Acceleration */}
             <div className="w-full h-full flex justify-center [perspective:1600px]">
               <div
                 onClick={() => setIsFlipped(prev => !prev)}
-                className={`relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] [transform-style:preserve-3d] select-none ${cardAnimClass}`}
+                onTouchStart={onCardTouchStart}
+                onTouchEnd={onCardTouchEnd}
+                className={`relative w-full h-full rounded-[28px] cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.25,0.64,1)] [transform-style:preserve-3d] select-none gpu-layer ${cardAnimClass}`}
                 style={{
                   transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
                 }}
               >
-                {/* FRONT FACE */}
+                {/* FRONT FACE (Pure Solid Surface, Zero Heavy Blur Lag) */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#161618]/90 backdrop-blur-2xl rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden]"
+                  className="absolute inset-0 w-full h-full bg-[#141416] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between [backface-visibility:hidden] gpu-layer"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
@@ -363,13 +558,13 @@ export default function BigDataLab() {
 
                   <div className="pt-4 border-t border-white/[0.06] flex items-center justify-center gap-2 text-white/40 text-xs sm:text-sm">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    <span>Toca o presiona Espacio para voltear</span>
+                    <span>Toca para voltear o desliza para navegar</span>
                   </div>
                 </div>
 
-                {/* BACK FACE */}
+                {/* BACK FACE (Pure Solid Surface, Zero Heavy Blur Lag) */}
                 <div 
-                  className="absolute inset-0 w-full h-full bg-[#121214]/95 backdrop-blur-2xl rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]"
+                  className="absolute inset-0 w-full h-full bg-[#111113] rounded-[28px] p-6 sm:p-10 border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.45)] flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)] gpu-layer"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-[#d8b4fe] font-mono text-xs font-semibold">
@@ -418,13 +613,13 @@ export default function BigDataLab() {
           </div>
         )}
 
-        {/* ================= QUIZ VIEW (SPRING MOTION & TACTILE FEEDBACK) ================= */}
+        {/* ================= QUIZ VIEW (SPRING MOTION & ENTER/EXIT FEEDBACK) ================= */}
         {activeTab === 'quiz' && (
           <div className="flex flex-col gap-6 w-full animate-fade-in">
             
-            {/* Question Card with Spring Motion */}
+            {/* Question Card with Spring Motion & Exit/Enter transitions */}
             {currentQuiz && (
-              <div className={`bg-[#141416]/75 backdrop-blur-2xl p-6 sm:p-9 rounded-[30px] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-6 transition-all duration-300 ${quizAnimClass}`}>
+              <div className={`bg-[#141416] p-6 sm:p-9 rounded-[30px] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.4)] flex flex-col gap-6 transition-all duration-300 gpu-layer ${quizAnimClass}`}>
                 
                 {/* Category & Question Number */}
                 <div className="flex items-center justify-between gap-3">
@@ -490,7 +685,7 @@ export default function BigDataLab() {
                         key={idx}
                         disabled={isAnswered}
                         onClick={() => handleSelectQuizOption(idx)}
-                        className={`w-full text-left p-4 sm:p-5 rounded-[20px] border transition-all duration-200 flex items-start gap-4 min-w-0 active:scale-[0.985] ${btnStyles} ${bounceAnim}`}
+                        className={`w-full text-left p-4 sm:p-5 rounded-[20px] border transition-all duration-200 flex items-start gap-4 min-w-0 active:scale-[0.985] touch-smooth ${btnStyles} ${bounceAnim}`}
                       >
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center font-mono text-xs flex-shrink-0 transition-colors ${letterStyles}`}>
                           {letters[idx]}
@@ -529,7 +724,7 @@ export default function BigDataLab() {
                   </div>
                 )}
 
-                {/* Quick Jump Question Grid (Full Width Grid) */}
+                {/* Quick Jump Question Grid (Full Width Grid with Animated Transitions) */}
                 <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2.5 w-full">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono text-white/40">Navegación de preguntas:</span>
@@ -553,8 +748,8 @@ export default function BigDataLab() {
                       return (
                         <button
                           key={q.id}
-                          onClick={() => setQuizIndex(idx)}
-                          className={`w-full aspect-square sm:aspect-auto sm:h-10 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-mono border transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-90 ${chipStyle}`}
+                          onClick={() => handleJumpToQuiz(idx)}
+                          className={`w-full aspect-square sm:aspect-auto sm:h-10 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-mono border transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-90 touch-smooth ${chipStyle}`}
                           title={`Pregunta ${idx + 1}`}
                         >
                           {idx + 1}
@@ -572,8 +767,8 @@ export default function BigDataLab() {
 
       </main>
 
-      {/* 3. Apple-Style Large Touch Target Bottom Dock */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#000000]/80 backdrop-blur-2xl border-t border-white/[0.08] px-4 sm:px-6 py-3 sm:py-3.5 shadow-[0_-12px_40px_rgba(0,0,0,0.65)]">
+      {/* 3. Apple-Style Large Touch Target Bottom Dock (Optimized GPU Composite) */}
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-[#09090b]/94 backdrop-blur-md border-t border-white/[0.08] px-4 sm:px-6 py-3 sm:py-3.5 shadow-[0_-8px_24px_rgba(0,0,0,0.45)] gpu-layer">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
           
           {/* FLASHCARDS: 4 Large Action Buttons */}
@@ -582,7 +777,7 @@ export default function BigDataLab() {
               {/* 1. Anterior */}
               <button
                 onClick={handlePrevCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth"
                 title={currentCardIndex === 0 ? "Primera tarjeta (límite)" : "Tarjeta anterior (←)"}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
@@ -592,7 +787,7 @@ export default function BigDataLab() {
               {/* 2. Aleatorio */}
               <button
                 onClick={handleRandomCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm text-white/60 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] active:scale-[0.92] transition-transform duration-200 touch-smooth"
                 title="Tarjeta aleatoria (R)"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className={`transition-transform duration-500 ${shuffleSpin ? 'rotate-180 scale-125' : ''}`}><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
@@ -602,7 +797,7 @@ export default function BigDataLab() {
               {/* 3. Marcar como Dominada */}
               <button
                 onClick={toggleMastered}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm active:scale-[0.92] transition-all duration-200 border ${
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-4 sm:px-5 rounded-2xl font-semibold text-xs sm:text-sm active:scale-[0.92] transition-all duration-200 border touch-smooth ${
                   masteredAnim ? 'animate-spring-pop' : ''
                 } ${
                   isCurrentMastered
@@ -618,7 +813,7 @@ export default function BigDataLab() {
               {/* 4. Siguiente (SOLID PURPLE) */}
               <button
                 onClick={handleNextCard}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-5 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.92] transition-all duration-200"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 h-12 sm:h-13 px-5 sm:px-7 rounded-2xl font-bold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.92] transition-all duration-200 touch-smooth"
                 title={currentCardIndex === FLASHCARDS.length - 1 ? "Última tarjeta (límite)" : "Siguiente tarjeta (→)"}
               >
                 <span>Siguiente</span>
@@ -633,7 +828,7 @@ export default function BigDataLab() {
               {/* 1. Anterior */}
               <button
                 onClick={handlePrevQuiz}
-                className="flex-1 sm:flex-initial sm:min-w-[140px] h-12 sm:h-13 px-4 sm:px-6 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] disabled:opacity-30 active:scale-[0.92] transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 sm:flex-initial sm:min-w-[140px] h-12 sm:h-13 px-4 sm:px-6 rounded-2xl font-semibold text-xs sm:text-sm text-white/80 hover:text-white bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] disabled:opacity-30 active:scale-[0.92] transition-all duration-200 flex items-center justify-center gap-2 touch-smooth"
                 title={quizIndex === 0 ? "Primera pregunta (límite)" : "Pregunta anterior"}
               >
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="m15 18-6-6 6-6"/></svg>
@@ -644,7 +839,7 @@ export default function BigDataLab() {
               {!isLastQuizQuestion ? (
                 <button
                   onClick={handleNextQuiz}
-                  className={`flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-semibold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+                  className={`flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-semibold text-xs sm:text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm transition-all duration-200 flex items-center justify-center gap-2 touch-smooth ${
                     !isCurrentAnswered ? 'opacity-60 hover:opacity-80 active:scale-[0.96]' : 'active:scale-[0.92]'
                   } ${unansweredWarn ? 'animate-rubber-band' : ''}`}
                   title={!isCurrentAnswered ? "Debes responder para continuar" : "Siguiente pregunta"}
@@ -655,7 +850,7 @@ export default function BigDataLab() {
               ) : (
                 <button
                   onClick={handleNextQuiz}
-                  className={`flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-bold text-xs sm:text-sm text-black bg-[#30D158] hover:bg-[#34C759] shadow-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+                  className={`flex-[1.4] sm:flex-1 h-12 sm:h-13 px-5 sm:px-8 rounded-2xl font-bold text-xs sm:text-sm text-black bg-[#30D158] hover:bg-[#34C759] shadow-sm transition-all duration-200 flex items-center justify-center gap-2 touch-smooth ${
                     !isCurrentAnswered ? 'opacity-60 hover:opacity-80 active:scale-[0.96]' : 'active:scale-[0.92]'
                   } ${unansweredWarn ? 'animate-rubber-band' : ''}`}
                   title={!isCurrentAnswered ? "Debes responder para ver resultados" : "Ver resultados"}
@@ -673,8 +868,8 @@ export default function BigDataLab() {
       {/* 4. Apple Sheet Confirmation Modal to Reset Quiz with Spring Bounce */}
       {showResetModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-md animate-fade-in" onClick={() => setShowResetModal(false)}></div>
-          <div className="bg-[#18181b]/90 backdrop-blur-3xl relative rounded-[28px] p-6 sm:p-8 max-w-sm w-full shadow-[0_25px_60px_rgba(0,0,0,0.7)] border border-white/[0.08] text-center flex flex-col gap-5 z-10 animate-modal-bounce">
+          <div className="absolute inset-0 bg-black/80 animate-fade-in" onClick={() => setShowResetModal(false)}></div>
+          <div className="bg-[#161618] relative rounded-[28px] p-6 sm:p-8 max-w-sm w-full shadow-[0_24px_50px_rgba(0,0,0,0.7)] border border-white/[0.1] text-center flex flex-col gap-5 z-10 animate-modal-bounce gpu-layer">
             <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center mx-auto text-white/80 animate-spring-pop">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
             </div>
@@ -689,13 +884,13 @@ export default function BigDataLab() {
             <div className="flex flex-col gap-2.5 mt-1">
               <button
                 onClick={handleResetQuiz}
-                className="w-full h-12 rounded-2xl font-semibold text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.96] transition-all"
+                className="w-full h-12 rounded-2xl font-semibold text-sm text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.96] transition-all touch-smooth"
               >
                 Sí, reiniciar
               </button>
               <button
                 onClick={() => setShowResetModal(false)}
-                className="w-full h-12 rounded-2xl font-semibold text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] active:scale-[0.96] transition-all"
+                className="w-full h-12 rounded-2xl font-semibold text-sm text-white/80 hover:text-white bg-white/[0.06] border border-white/[0.08] active:scale-[0.96] transition-all touch-smooth"
               >
                 Cancelar
               </button>
@@ -708,16 +903,16 @@ export default function BigDataLab() {
       {showResultsModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-black/85 backdrop-blur-md animate-fade-in" 
+            className="absolute inset-0 bg-black/85 animate-fade-in" 
             onClick={() => setShowResultsModal(false)}
           ></div>
           
-          <div className="bg-[#18181b]/92 backdrop-blur-3xl relative rounded-[32px] p-6 sm:p-9 max-w-md w-full shadow-[0_30px_70px_rgba(0,0,0,0.75)] border border-white/[0.08] text-center flex flex-col items-center gap-6 z-10 animate-modal-bounce">
+          <div className="bg-[#161618] relative rounded-[32px] p-6 sm:p-9 max-w-md w-full shadow-[0_28px_60px_rgba(0,0,0,0.75)] border border-white/[0.1] text-center flex flex-col items-center gap-6 z-10 animate-modal-bounce gpu-layer">
             
             {/* Close Button */}
             <button
               onClick={() => setShowResultsModal(false)}
-              className="absolute top-4 right-4 text-white/40 hover:text-white p-2.5 rounded-full hover:bg-white/[0.06] active:scale-95 transition"
+              className="absolute top-4 right-4 text-white/40 hover:text-white p-2.5 rounded-full hover:bg-white/[0.06] active:scale-95 transition touch-smooth"
               title="Cerrar modal"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -817,7 +1012,7 @@ export default function BigDataLab() {
                   setShowResultsModal(false);
                   setShowResetModal(true);
                 }}
-                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white bg-[#9333ea] hover:bg-[#a855f7] shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 touch-smooth"
               >
                 Reiniciar cuestionario
               </button>
@@ -826,7 +1021,7 @@ export default function BigDataLab() {
                   setShowResultsModal(false);
                   setActiveTab('flashcards');
                 }}
-                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white/90 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.08] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full h-13 sm:h-14 rounded-2xl font-semibold text-[15px] sm:text-base text-white/90 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.08] active:scale-[0.98] transition-all flex items-center justify-center gap-2 touch-smooth"
               >
                 Repasar en Flashcards
               </button>

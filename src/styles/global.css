@@ -65,8 +65,24 @@
 }
 
 @layer utilities {
+  /* GPU Acceleration & Performance Helpers */
+  .gpu-layer {
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: transform, opacity;
+  }
+  .touch-smooth {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Fade & Spring Animations */
   .animate-fade-in {
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-fade-out {
+      animation: fadeOut 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
   .animate-spring-pop {
       animation: springPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -75,25 +91,50 @@
       animation: rubberBand 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   }
   .animate-tactile-shake {
-      animation: tactileShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+      animation: tactileShake 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97);
   }
   .animate-success-pulse {
-      animation: successPulse 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: successPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .animate-modal-bounce {
-      animation: modalBounce 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: modalBounce 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  .animate-slide-right {
-      animation: cardSlideRight 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .animate-modal-exit {
+      animation: modalExit 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
-  .animate-slide-left {
-      animation: cardSlideLeft 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  /* Card Enter & Exit Transitions (Next / Prev / Random) */
+  .animate-card-exit-left {
+      animation: cardExitLeft 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
+  .animate-card-enter-right {
+      animation: cardEnterRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-card-exit-right {
+      animation: cardExitRight 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .animate-card-enter-left {
+      animation: cardEnterLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-card-exit-fade {
+      animation: cardExitFade 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .animate-card-enter-pop {
+      animation: springPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Boundary Limits / Elastic Bounces */
   .animate-boundary-right {
-      animation: boundaryNudgeRight 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: boundaryNudgeRight 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .animate-boundary-left {
-      animation: boundaryNudgeLeft 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: boundaryNudgeLeft 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .animate-overscroll-bounce-top {
+      animation: overscrollBounceTop 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .animate-overscroll-bounce-bottom {
+      animation: overscrollBounceBottom 0.45s cubic-bezier(0.25, 1, 0.5, 1);
   }
 }
 
@@ -102,67 +143,109 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(4px); }
+}
+
 @keyframes springPop {
-    0% { transform: scale(0.92); opacity: 0.8; }
-    50% { transform: scale(1.05); opacity: 1; }
+    0% { transform: scale(0.94); opacity: 0; }
+    50% { transform: scale(1.03); opacity: 1; }
     100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes rubberBand {
     0% { transform: scale3d(1, 1, 1); }
-    30% { transform: scale3d(1.12, 0.88, 1); }
-    40% { transform: scale3d(0.9, 1.1, 1); }
-    50% { transform: scale3d(1.06, 0.94, 1); }
-    65% { transform: scale3d(0.98, 1.02, 1); }
-    75% { transform: scale3d(1.02, 0.98, 1); }
+    30% { transform: scale3d(1.1, 0.9, 1); }
+    40% { transform: scale3d(0.92, 1.08, 1); }
+    50% { transform: scale3d(1.04, 0.96, 1); }
+    65% { transform: scale3d(0.99, 1.01, 1); }
+    75% { transform: scale3d(1.01, 0.99, 1); }
     100% { transform: scale3d(1, 1, 1); }
 }
 
 @keyframes tactileShake {
     0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-7px); }
-    40% { transform: translateX(7px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
 }
 
 @keyframes successPulse {
     0% { transform: scale(1); }
-    40% { transform: scale(1.035); }
+    40% { transform: scale(1.03); }
     70% { transform: scale(0.985); }
     100% { transform: scale(1); }
 }
 
 @keyframes modalBounce {
-    0% { opacity: 0; transform: scale(0.92) translateY(16px); }
-    65% { opacity: 1; transform: scale(1.015) translateY(-2px); }
+    0% { opacity: 0; transform: scale(0.92) translateY(14px); }
+    65% { opacity: 1; transform: scale(1.012) translateY(-2px); }
     100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-@keyframes cardSlideRight {
-    0% { opacity: 0; transform: translateX(28px) scale(0.98); }
-    100% { opacity: 1; transform: translateX(0) scale(1); }
+@keyframes modalExit {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.94) translateY(10px); }
 }
 
-@keyframes cardSlideLeft {
-    0% { opacity: 0; transform: translateX(-28px) scale(0.98); }
-    100% { opacity: 1; transform: translateX(0) scale(1); }
+/* Card Exit & Enter Keyframes */
+@keyframes cardExitLeft {
+    0% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(-35px, 0, 0) scale(0.96); }
+}
+
+@keyframes cardEnterRight {
+    0% { opacity: 0; transform: translate3d(35px, 0, 0) scale(0.96); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes cardExitRight {
+    0% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(35px, 0, 0) scale(0.96); }
+}
+
+@keyframes cardEnterLeft {
+    0% { opacity: 0; transform: translate3d(-35px, 0, 0) scale(0.96); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes cardExitFade {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.94); }
 }
 
 @keyframes boundaryNudgeRight {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(12px); }
-    50% { transform: translateX(-6px); }
-    75% { transform: translateX(3px); }
-    100% { transform: translateX(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(12px, 0, 0); }
+    50% { transform: translate3d(-6px, 0, 0); }
+    75% { transform: translate3d(3px, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }
 
 @keyframes boundaryNudgeLeft {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-12px); }
-    50% { transform: translateX(6px); }
-    75% { transform: translateX(-3px); }
-    100% { transform: translateX(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(-12px, 0, 0); }
+    50% { transform: translate3d(6px, 0, 0); }
+    75% { transform: translate3d(-3px, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes overscrollBounceTop {
+    0% { transform: translate3d(0, 0, 0); }
+    30% { transform: translate3d(0, 24px, 0); }
+    60% { transform: translate3d(0, -6px, 0); }
+    85% { transform: translate3d(0, 2px, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes overscrollBounceBottom {
+    0% { transform: translate3d(0, 0, 0); }
+    30% { transform: translate3d(0, -24px, 0); }
+    60% { transform: translate3d(0, 6px, 0); }
+    85% { transform: translate3d(0, -2px, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }
 
 ::-webkit-scrollbar {

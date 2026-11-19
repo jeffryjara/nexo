@@ -22,20 +22,36 @@ const { title } = Astro.props;
     </script>
     <title>{title || 'Plataforma de Estudio'}</title>
 </head>
-<body class="overflow-x-clip antialiased relative">
-    <div id="global-spotlight" class="pointer-events-none fixed inset-0 z-[-50] transition-opacity duration-300 opacity-0" style="background: radial-gradient(600px circle at 0px 0px, rgba(168,85,247,0.12), transparent 40%);"></div>
+<body class="overflow-x-clip antialiased relative touch-smooth" style="overscroll-behavior-y: contain;">
+    <div id="global-spotlight" class="pointer-events-none fixed inset-0 z-[-50] transition-opacity duration-300 opacity-0 hidden md:block" style="background: radial-gradient(600px circle at 0px 0px, rgba(168,85,247,0.12), transparent 40%);"></div>
     <script>
-        document.addEventListener('mousemove', (e) => {
+        // Only run desktop cursor spotlight on devices with fine pointer (mouse/trackpad)
+        // Completely disabled on mobile/touch screens to ensure 60fps native performance
+        if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            let rafId = null;
+            let lastX = 0, lastY = 0;
             const spotlight = document.getElementById('global-spotlight');
-            if (spotlight) {
-                spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(168,85,247,0.12), transparent 40%)`;
-                spotlight.style.opacity = '1';
-            }
-        });
-        document.addEventListener('mouseleave', () => {
-            const spotlight = document.getElementById('global-spotlight');
-            if (spotlight) spotlight.style.opacity = '0';
-        });
+
+            const updateSpotlight = () => {
+                if (spotlight) {
+                    spotlight.style.background = `radial-gradient(600px circle at ${lastX}px ${lastY}px, rgba(168,85,247,0.12), transparent 40%)`;
+                    spotlight.style.opacity = '1';
+                }
+                rafId = null;
+            };
+
+            document.addEventListener('mousemove', (e) => {
+                lastX = e.clientX;
+                lastY = e.clientY;
+                if (!rafId) {
+                    rafId = requestAnimationFrame(updateSpotlight);
+                }
+            }, { passive: true });
+
+            document.addEventListener('mouseleave', () => {
+                if (spotlight) spotlight.style.opacity = '0';
+            }, { passive: true });
+        }
     </script>
     <div class="relative z-10 flex flex-col min-h-screen"><slot /></div>
 </body>
