@@ -1,53 +1,34 @@
 import React from "react";
 
-export const InteractiveHoverButton = React.forwardRef(({ text = "Button", className, onClick, ...props }, ref) => {
+export const InteractiveHoverButton = React.forwardRef(({ text = "Comprobar solución", className, onClick, ...props }, ref) => {
   return (
-    <>
-      <style>{`
-        @keyframes snake-border {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-      <button
-        ref={ref}
-        onClick={onClick}
-        className={`group relative w-full sm:w-auto min-w-[220px] cursor-pointer overflow-hidden rounded-2xl p-[2px] text-center font-bold text-text-main transition-all active:scale-95 shadow-lg ${className || ""}`}
-        {...props}
+    <button
+      ref={ref}
+      onClick={onClick}
+      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#9333ea] via-[#a855f7] to-[#9333ea] bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold text-lg py-5 px-8 shadow-[0_4px_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] border border-purple-400/30 transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 w-full sm:w-auto min-w-[220px] cursor-pointer ${className || ""}`}
+      {...props}
+    >
+      {/* Shimmer light sweep effect on hover */}
+      <span 
+        className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" 
+      />
+      
+      {/* Icon with smooth pop micro-interaction */}
+      <svg 
+        className="w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2.5" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
       >
-        {/* Snake Border Gradient */}
-        <div 
-            className="absolute inset-[-100%] z-0" 
-            style={{ 
-                animation: 'snake-border 3s linear infinite', 
-                backgroundImage: 'conic-gradient(from 90deg at 50% 50%, transparent 0%, transparent 85%, #a855f7 100%)' 
-            }}
-        ></div>
-        
-        {/* Inner Container uses Grid to stack content and size to largest */}
-        <div className="relative z-10 grid h-full w-full place-items-center overflow-hidden rounded-[14px] px-8 py-5">
-            {/* Opaque Background layer to block gradient bleeding */}
-            <div className="absolute inset-0 bg-white dark:bg-black z-0"></div>
-            {/* Surface Background layer */}
-            <div className="absolute inset-0 bg-surface z-0"></div>
-            
-            {/* Expanding Background on Hover */}
-            <div className="absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent transition-all duration-500 ease-out group-hover:h-[500px] group-hover:w-[500px] z-0"></div>
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
 
-            {/* Normal Text */}
-            <span className="col-start-1 row-start-1 inline-block transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-lg relative z-10">
-              {text}
-            </span>
-
-            {/* Hover Content */}
-            <div className="col-start-1 row-start-1 flex translate-x-12 items-center justify-center gap-3 text-white opacity-0 transition-all duration-300 group-hover:!translate-x-0 group-hover:opacity-100 relative z-10 w-full">
-              <svg className="flex-shrink-0" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-              <span className="text-lg whitespace-nowrap">{text}</span>
-            </div>
-            
-        </div>
-      </button>
-    </>
+      {/* Button Text */}
+      <span className="tracking-wide whitespace-nowrap">{text}</span>
+    </button>
   );
 });
 

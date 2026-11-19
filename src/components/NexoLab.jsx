@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GlowCard } from './ui/spotlight-card';
-import { InductionCardEffect } from './ui/InductionCardEffect';
 import { InteractiveHoverButton } from './ui/InteractiveHoverButton';
 import { todosLosProblemas } from '../data/problems';
 import { evaluarBooleano, countVariables } from '../utils/engine';
@@ -399,44 +398,41 @@ setUserGrid(initialGrid);
                     <div className="max-w-6xl mx-auto flex flex-col gap-8 w-full">
                         <div className="flex flex-col space-y-8 w-full">
                             
-                            <div className="relative group rounded-3xl overflow-hidden w-full flex flex-col border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500">
-    <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
-    <div className="relative z-10 p-8 w-full flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
-                                        <h2 className="text-xl font-bold text-accent m-0">
-                                            {currentProblem.title.includes(':') ? (
-                                                <>
-                                                    <span className="uppercase">{currentProblem.title.split(':')[0]}</span>
-                                                    :{currentProblem.title.split(':').slice(1).join(':')}
-                                                </>
-                                            ) : (
-                                                currentProblem.title
-                                            )}
-                                        </h2>
-                                        <button 
-                                            onClick={useHint} 
-                                            disabled={hintsUsed >= 3 || status === 'correct'}
-                                            className={`flex items-center gap-2 font-bold py-2 px-4 rounded-xl transition shadow-sm border whitespace-nowrap flex-shrink-0
-                                                ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
-                                        >
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
-                                            {hintsUsed >= 3 ? 'Sin pistas' : `Pista (${3 - hintsUsed})`}
-                                        </button>
+                            <div className="glass-panel rounded-3xl p-8 shadow-lg w-full flex flex-col gap-2 border border-white/10 hover:border-white/20 transition-all">
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pl-2">
+                                    <h2 className="text-xl font-bold text-accent m-0">
+                                        {currentProblem.title.includes(':') ? (
+                                            <>
+                                                <span className="uppercase">{currentProblem.title.split(':')[0]}</span>
+                                                :{currentProblem.title.split(':').slice(1).join(':')}
+                                            </>
+                                        ) : (
+                                            currentProblem.title
+                                        )}
+                                    </h2>
+                                    <button 
+                                        onClick={useHint} 
+                                        disabled={hintsUsed >= 3 || status === 'correct'}
+                                        className={`flex items-center gap-2 font-bold py-2 px-4 rounded-xl transition shadow-sm border whitespace-nowrap flex-shrink-0
+                                            ${hintsUsed >= 3 || status === 'correct' ? 'bg-surface text-text-muted border-border cursor-not-allowed opacity-50' : 'bg-warning-soft text-warning border-warning-soft hover:border-warning active:scale-95'}`}
+                                    >
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                                        {hintsUsed >= 3 ? 'Sin pistas' : `Pista (${3 - hintsUsed})`}
+                                    </button>
+                                </div>
+                                <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-0">{currentProblem.description}</p>
+                                
+                                {hintsUsed > 0 && (
+                                    <div className="pl-2 mt-4 space-y-3">
+                                        {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
+                                            <div key={idx} className="bg-warning-soft border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
+                                                <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
+                                                <span className="font-medium text-base">{hint}</span>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <p className="text-text-muted whitespace-pre-line leading-relaxed pl-2 text-lg mb-0">{currentProblem.description}</p>
-                                    
-                                    {hintsUsed > 0 && (
-                                        <div className="pl-2 mt-4 space-y-3">
-                                            {currentProblem.hints.slice(0, hintsUsed).map((hint, idx) => (
-                                                <div key={idx} className="bg-warning-soft border-l-4 border-l-warning p-4 rounded-2xl text-text-main text-sm shadow-sm animate-fade-in">
-                                                    <span className="font-extrabold uppercase tracking-widest text-xs mr-2 text-warning">Pista {idx + 1}:</span> 
-                                                    <span className="font-medium text-base">{hint}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-    </div>
-</div>
+                                )}
+                            </div>
 <div className="flex flex-col gap-1 w-full">
 <div className="glass-panel rounded-t-3xl rounded-b-none p-8 shadow-lg" style={{ backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}>
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
@@ -652,10 +648,8 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                         </div> {/* CIERRE DE GAP-1 */}
 
                         {/* Paginación en card separada */}
-                            <div className="w-full flex justify-center">
-                            <div className="relative group rounded-full overflow-hidden w-fit flex justify-center border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)] bg-[#a855f7]/10 hover:bg-[#a855f7]/15 backdrop-blur-md transition-all duration-500 p-4 px-10">
-                            <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
-                            <div className="relative z-10 flex w-full justify-center">
+                        <div className="w-full flex justify-center">
+                            <div className="glass-panel rounded-full p-4 px-8 border border-white/10 hover:border-white/20 shadow-lg flex items-center justify-center transition-all">
                                 <div className="flex items-center justify-center gap-6 w-auto flex-nowrap">
                                     {currentIndex > 0 && (
                                         <button 
@@ -681,7 +675,6 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
         
@@ -689,25 +682,22 @@ style={cell === '-' ? { borderColor: 'transparent', boxShadow: 'none', outline: 
             {clearTarget && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setClearTarget(null)}></div>
-                    <div className="relative group rounded-3xl overflow-hidden max-w-md w-full flex flex-col border border-white/5 shadow-[0_8px_32px_rgba(168,85,247,0.15)] bg-[#a855f7]/10 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]">
-                        <InductionCardEffect className="absolute inset-0 z-0 pointer-events-none" />
-                        <div className="relative z-10 p-8">
-                            <button onClick={() => setClearTarget(null)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                            </button>
-                            <div className="flex items-center gap-3 mb-6">
-                                <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
-                            </div>
-                            <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
-                                {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad."}
-                                {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
-                                {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
-                                {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
-                            </p>
-                            <div className="flex gap-4">
-                                <button onClick={() => setClearTarget(null)} className="flex-1 px-5 py-3 rounded-xl font-bold text-text-main bg-surface border border-white/10 hover:bg-white/5 transition">Cancelar</button>
-                                <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-accent hover:bg-accent/90 border border-accent transition">Limpiar</button>
-                            </div>
+                    <div className="glass-panel relative rounded-3xl p-8 max-w-md w-full shadow-2xl animate-[fadeIn_0.2s_ease-out] border border-white/10">
+                        <button onClick={() => setClearTarget(null)} className="absolute top-6 right-6 text-text-muted hover:text-white transition">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        </button>
+                        <div className="flex items-center gap-3 mb-6">
+                            <h2 className="text-2xl font-extrabold text-text-main">¿Estás seguro?</h2>
+                        </div>
+                        <p className="text-text-muted text-base mb-8 leading-relaxed font-medium">
+                            {clearTarget === 'tables' && "Esto borrará todos los datos ingresados en la Tabla de Verdad."}
+                            {clearTarget === 'kmap' && "Esto borrará todos los datos ingresados en el Mapa de Karnaugh."}
+                            {clearTarget === 'procedimiento' && "Esto borrará todo el texto ingresado en tu Procedimiento."}
+                            {clearTarget === 'final' && "Esto borrará tu Función Lógica Final ingresada."}
+                        </p>
+                        <div className="flex gap-4">
+                            <button onClick={() => setClearTarget(null)} className="flex-1 px-5 py-3 rounded-xl font-bold text-text-main bg-surface border border-white/10 hover:bg-white/5 transition">Cancelar</button>
+                            <button onClick={executeClear} className="flex-1 px-5 py-3 rounded-xl font-bold text-white bg-accent hover:bg-accent/90 border border-accent transition">Limpiar</button>
                         </div>
                     </div>
                 </div>

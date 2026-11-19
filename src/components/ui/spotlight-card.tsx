@@ -35,7 +35,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
   width,
   height,
   customSize = false,
-  tiltLevel = 'high'
+  tiltLevel = 'none'
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -213,7 +213,10 @@ const GlowCard: React.FC<GlowCardProps> = ({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         data-glow
-        style={{ ...getInlineStyles(), rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
+        style={{ 
+          ...getInlineStyles(), 
+          ...(tiltLevel !== 'none' ? { rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 } : {}) 
+        }}
         className={`
           ${getSizeClasses()}
           ${!customSize ? 'aspect-[3/4]' : ''}

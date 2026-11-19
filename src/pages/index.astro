@@ -20,8 +20,8 @@ import { GlowCard } from '../components/ui/spotlight-card';
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 my-auto w-full">
             <!-- 1. Arquitectura -->
-            <a href="/arquitectura" style="perspective: 1000px;" class="block h-full group transition-transform duration-300 lg:col-span-2 md:col-span-1">
-                <GlowCard client:load customSize={true} glowColor="blue" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer">
+            <a href="/arquitectura" class="block h-full group transition-all duration-300 hover:-translate-y-1 lg:col-span-2 md:col-span-1">
+                <GlowCard client:load customSize={true} tiltLevel="none" glowColor="blue" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer">
                 <span class="text-accent font-bold text-xs tracking-[0.2em]">Curso</span>
                 <h2 class="text-2xl font-extrabold text-white/40 group-hover:text-white transition-colors duration-300">Arquitectura del Computador</h2>
                 <div class="inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-[#a855f7]/30 to-[#a855f7]/10 backdrop-blur-md border border-[#a855f7]/30 text-[#a855f7] font-semibold text-sm group-hover:text-text-main group-hover:border-[#a855f7]/60 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 w-max">
@@ -31,8 +31,8 @@ import { GlowCard } from '../components/ui/spotlight-card';
             </a>
 
             <!-- 2. Base de Datos -->
-            <a href="/bd" style="perspective: 1000px;" class="block h-full group transition-transform duration-300 lg:col-span-2 md:col-span-1">
-                <GlowCard client:load customSize={true} glowColor="orange" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
+            <a href="/bd" class="block h-full group transition-all duration-300 hover:-translate-y-1 lg:col-span-2 md:col-span-1">
+                <GlowCard client:load customSize={true} tiltLevel="none" glowColor="orange" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
                 <span class="absolute top-6 right-6 text-white/10 text-xs font-semibold tracking-wider">En proceso</span>
                 <span class="text-accent font-bold text-xs tracking-[0.2em]">Curso</span>
                 <h2 class="text-2xl font-extrabold text-white/40 group-hover:text-white transition-colors duration-300">Base de Datos Avanzado y Big Data</h2>
@@ -43,8 +43,8 @@ import { GlowCard } from '../components/ui/spotlight-card';
             </a>
 
             <!-- 3. Computación Gráfica -->
-            <a href="/grafica" style="perspective: 1000px;" class="block h-full group transition-transform duration-300 lg:col-span-2 md:col-span-1">
-                <GlowCard client:load customSize={true} glowColor="purple" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
+            <a href="/grafica" class="block h-full group transition-all duration-300 hover:-translate-y-1 lg:col-span-2 md:col-span-1">
+                <GlowCard client:load customSize={true} tiltLevel="none" glowColor="purple" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
                 <span class="absolute top-6 right-6 text-white/10 text-xs font-semibold tracking-wider">En proceso</span>
                 <span class="text-accent font-bold text-xs tracking-[0.2em]">Curso</span>
                 <h2 class="text-2xl font-extrabold text-white/40 group-hover:text-white transition-colors duration-300">Computación Gráfica y Visual</h2>
@@ -55,8 +55,8 @@ import { GlowCard } from '../components/ui/spotlight-card';
             </a>
 
             <!-- 4. Interacción Humano Computador -->
-            <a href="/ihc" style="perspective: 1000px;" class="block h-full group transition-transform duration-300 lg:col-span-3 md:col-span-1">
-                <GlowCard client:load customSize={true} glowColor="green" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
+            <a href="/ihc" class="block h-full group transition-all duration-300 hover:-translate-y-1 lg:col-span-3 md:col-span-1">
+                <GlowCard client:load customSize={true} tiltLevel="none" glowColor="green" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
                 <span class="absolute top-6 right-6 text-white/10 text-xs font-semibold tracking-wider">En proceso</span>
                 <span class="text-accent font-bold text-xs tracking-[0.2em]">Curso</span>
                 <h2 class="text-2xl font-extrabold text-white/40 group-hover:text-white transition-colors duration-300">Interacción Humano Computador</h2>
@@ -67,8 +67,8 @@ import { GlowCard } from '../components/ui/spotlight-card';
             </a>
 
             <!-- 5. Modelamiento y Análisis de Software -->
-            <a href="/modelamiento" style="perspective: 1000px;" class="block h-full group transition-transform duration-300 lg:col-span-3 md:col-span-2">
-                <GlowCard client:load customSize={true} glowColor="red" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
+            <a href="/modelamiento" class="block h-full group transition-all duration-300 hover:-translate-y-1 lg:col-span-3 md:col-span-2">
+                <GlowCard client:load customSize={true} tiltLevel="none" glowColor="red" className="!h-full !flex !flex-col !p-6 !gap-8 !rounded-3xl cursor-pointer relative">
                 <span class="absolute top-6 right-6 text-white/10 text-xs font-semibold tracking-wider">En proceso</span>
                 <span class="text-accent font-bold text-xs tracking-[0.2em]">Curso</span>
                 <h2 class="text-2xl font-extrabold text-white/40 group-hover:text-white transition-colors duration-300">Modelamiento y Análisis de Software</h2>
